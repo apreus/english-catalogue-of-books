@@ -10,7 +10,7 @@ Original Colab Notebook can be found in `Parsing_ECB_1912_wi23.ipynb`.
 
 Clean Entries can be found at `/clean_entries`.
 
-Clean Entries measures can be found at `/clean_entries_measures`. These text files provide metrics that help understand said data.
+Clean Entry measures can be found at `/clean_entries_measures`. These text files provide metrics that help understand said data.
 
 ## Installation Requirements
 
@@ -32,7 +32,7 @@ To not print out entry metrics during the running process:
 
 ## TODOs
 
-Written for week of 4/12-4/17:
+Written for week of 4/12-4/19:
 
 * Check for (number)vo in wrong places
 * Check for currency in wrong places

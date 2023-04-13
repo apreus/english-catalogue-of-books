@@ -89,6 +89,8 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     Output:
         clean_entries: array; object containing clean entries.
         clean_entries_measures: array; object containing clean entries measures.
+        line_mid_entries: array; object containing entries with dates in the middle.
+        front_trunc_entries: array; object containing entries with front truncation.
     """
     # Get file contents
     infile = open(file_path, "r", encoding="utf-8", errors="ignore")
@@ -150,44 +152,48 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
         "Dec",
     ]
 
-    linemid_re = re.compile(r".*({})\.?\W00\.?[^\.]+".format("|".join(month_abbrvs)))
-    linemid_entries = [entry for entry in entries if linemid_re.search(entry)]
+    line_mid_re = re.compile(r".*({})\.?\W00\.?[^\.]+".format("|".join(month_abbrvs)))
+    line_mid_entries = [entry for entry in entries if line_mid_re.search(entry)]
 
-    len_linemid_entries = len(linemid_entries)
-    percent_linemid_entries = len(linemid_entries) / len(entries)
+    len_line_mid_entries = len(line_mid_entries)
+    percent_line_mid_entries = len(line_mid_entries) / len(entries)
     if verbose:
-        print(f"\n Total Line Mid Entries: {len_linemid_entries}")
-        print(f"Percent Line Mid Entries: {percent_linemid_entries}")
+        print(f"\n Total Line Mid Entries: {len_line_mid_entries}")
+        print(f"Percent Line Mid Entries: {percent_line_mid_entries}")
 
-    fronttrunc_re = re.compile(r"^[^A-ZÆ\"“]")
-    fronttrunc_entries = [entry for entry in entries if fronttrunc_re.search(entry)]
+    front_trunc_re = re.compile(r"^[^A-ZÆ\"“]")
+    front_trunc_entries = [entry for entry in entries if front_trunc_re.search(entry)]
     
-    len_fronttrunc_entries = len(fronttrunc_entries)
+    len_front_trunc_entries = len(front_trunc_entries)
 
     if verbose:
-        print(f"Total Trunc Entries: {len_fronttrunc_entries}")
+        print(f"Total Trunc Entries: {len_front_trunc_entries}")
 
-    percent_fronttrunc_entries = len(fronttrunc_entries) / len(entries)
+    percent_front_trunc_entries = len(front_trunc_entries) / len(entries)
 
     if verbose:
-        print(f"Percent Trunc Entries: {percent_fronttrunc_entries}")
+        print(f"Percent Trunc Entries: {percent_front_trunc_entries}")
         
     clean_entries = [
         entry
         for entry in entries
-        if not (linemid_re.search(entry) or fronttrunc_re.search(entry))
+        if not (line_mid_re.search(entry) or front_trunc_re.search(entry))
     ]
     len_clean_entries = len(clean_entries)
 
     if verbose:
         print(f"Total Clean Entries: {len_clean_entries}")
 
-    clean_entries_measures = len_linemid_entries, percent_linemid_entries, len_fronttrunc_entries, percent_fronttrunc_entries, len_clean_entries
-    return clean_entries, clean_entries_measures
+    clean_entries_measures = len_line_mid_entries, percent_line_mid_entries, len_front_trunc_entries, percent_front_trunc_entries, len_clean_entries
+    return clean_entries, clean_entries_measures, line_mid_entries, front_trunc_entries
 
-def clean_entries_and_measures_to_csv(clean_entries, clean_entries_measures, year_string, 
-                                      cwd_path, clean_entries_directory, 
-                                      clean_entries_measures_directory, pattern):
+def clean_entries_and_measures_to_csv(clean_entries, clean_entries_measures, 
+                                      line_mid_entries, front_trunc_entries,
+                                      year_string, cwd_path, clean_entries_directory,
+                                      clean_entries_measures_directory,
+                                      line_mid_entries_directory,
+                                      front_trunc_entries_directory,  
+                                      pattern):
     """
     Prints clean entries from a single Princeton OCR file's year to a CSV file and
     prints clean entries measures from a single Princeton OCR file's year to a text
@@ -196,43 +202,63 @@ def clean_entries_and_measures_to_csv(clean_entries, clean_entries_measures, yea
     Arguments:
         clean_entries: array; object containing clean entries.
         clean_entries_measures: array; object containing clean entries measures.
+        line_mid_entries: array; object containing entries with dates in the middle.
+        front_trunc_entries: array; object containing entries with front truncation.
         year_string: String; string representation of year.
         cwd_path: String; current working directory path.
         clean_entries_directory: String; clean entries directory.
         clean_entries_measures_directory: String; clean entries measures directory.
+        line_mid_entries_directory: String; clean entries directory.
+        front_trunc_entries_directory: String; clean entries directory.
         pattern: Raw String; header pattern string.
 
     """
 
-    # Make sure entries directories exist
+    # Make sure entries directory exists
     if not os.path.exists(f"{cwd_path}/{clean_entries_directory}"):
         os.makedirs(f"{cwd_path}/{clean_entries_directory}")
-    if not os.path.exists(f"{cwd_path}/{clean_entries_directory}/"):
-        os.makedirs(f"{cwd_path}/{clean_entries_directory}/")
 
-    # Make sure measures directories exist
+    # Make sure measures directory exists
     if not os.path.exists(f"{cwd_path}/{clean_entries_measures_directory}"):
         os.makedirs(f"{cwd_path}/{clean_entries_measures_directory}")
-    if not os.path.exists(f"{cwd_path}/{clean_entries_measures_directory}/"):
-        os.makedirs(f"{cwd_path}/{clean_entries_measures_directory}/")
+
+    # Make sure line mid directory exists
+    if not os.path.exists(f"{cwd_path}/{line_mid_entries_directory}"):
+        os.makedirs(f"{cwd_path}/{line_mid_entries_directory}")
+
+    # Make sure front trunc directory exists
+    if not os.path.exists(f"{cwd_path}/{front_trunc_entries_directory}"):
+        os.makedirs(f"{cwd_path}/{front_trunc_entries_directory}")
 
     with open(f"{cwd_path}/{clean_entries_directory}/entries_19{year_string}.csv", 
             "w", newline='', encoding="utf-8", errors="ignore") as f:
-        csv_writer = csv.writer(f)
+        csv_writer = csv.writer(f, quotechar='"')
         for entry in clean_entries:
             csv_writer.writerow([entry])
+    
+    with open(f"{cwd_path}/{line_mid_entries_directory}/entries_19{year_string}.csv", 
+        "w", newline='', encoding="utf-8", errors="ignore") as f:
+        csv_writer = csv.writer(f, quotechar='"')
+        for entry in line_mid_entries:
+            csv_writer.writerow([entry])
 
-    len_linemid_entries = clean_entries_measures[0]
-    percent_linemid_entries = clean_entries_measures[1]
-    len_fronttrunc_entries = clean_entries_measures[2]
-    percent_fronttrunc_entries = clean_entries_measures[3]
+    with open(f"{cwd_path}/{front_trunc_entries_directory}/entries_19{year_string}.csv", 
+        "w", newline='', encoding="utf-8", errors="ignore") as f:
+        csv_writer = csv.writer(f, quotechar='"')
+        for entry in front_trunc_entries:
+            csv_writer.writerow([entry])
+
+    len_line_mid_entries = clean_entries_measures[0]
+    percent_line_mid_entries = clean_entries_measures[1]
+    len_front_trunc_entries = clean_entries_measures[2]
+    percent_front_trunc_entries = clean_entries_measures[3]
     len_clean_entries = clean_entries_measures[4]
     with open(f"{cwd_path}/{clean_entries_measures_directory}/entries_measures_19{year_string}.txt", 
             "w", newline='', encoding="utf-8", errors="ignore") as f:
-        f.write(f"Total Linemid Entries: {len_linemid_entries}\n")
-        f.write(f"Percent of Linemid Entries: {percent_linemid_entries}\n")
-        f.write(f"Total Fronttrunc Entries: {len_fronttrunc_entries}\n")
-        f.write(f"Percent Fronttrunc Entries: {percent_fronttrunc_entries}\n")
+        f.write(f"Total Line Mid Entries: {len_line_mid_entries}\n")
+        f.write(f"Percent of Line Mid Entries: {percent_line_mid_entries}\n")
+        f.write(f"Total Front Trunc Entries: {len_front_trunc_entries}\n")
+        f.write(f"Percent Front Trunc Entries: {percent_front_trunc_entries}\n")
         f.write(f"Total Clean Entries: {len_clean_entries}\n")
         f.write(f"Pattern: {pattern}")
 
@@ -277,10 +303,16 @@ if __name__ == "__main__":
             file_path = cwd_path + os.path.join(folder_path, file_name)
             clean_entries_directory = "/clean_entries/"
             clean_entries_measures_directory = "/clean_entries_measures/"
+            front_trunc_entries_directory = "/front_trunc_entries/"
+            line_mid_entries_directory = "/line_mid_entries/"
             
             pattern = pat7
-            clean_entries, clean_entries_measures = get_clean_entries(year_string, file_path, pattern, verbose)   
-            
+            clean_entries, clean_entries_measures, line_mid_entries, front_trunc_entries = get_clean_entries(year_string, 
+                                                                                                           file_path, 
+                                                                                                           pattern, verbose)   
             clean_entries_and_measures_to_csv(clean_entries, clean_entries_measures, 
+                                    line_mid_entries, front_trunc_entries, 
                                     year_string, cwd_path, clean_entries_directory,
-                                    clean_entries_measures_directory, pattern)
+                                    clean_entries_measures_directory, 
+                                    front_trunc_entries_directory,
+                                    line_mid_entries_directory, pattern)
