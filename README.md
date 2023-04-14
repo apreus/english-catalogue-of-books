@@ -40,6 +40,7 @@ Written for week of 4/12-4/19:
         * Can probably come up with some probabilistic or deterministic method that helps us find the returned entry that matches the value with blanks
     * Potential Python Wrapper Library that helps with making World Cat API requests: [bookops-worldcat](https://pypi.org/project/bookops-worldcat/)
         * [Documentation](https://bookops-cat.github.io/bookops-worldcat/0.5/)
+        * Supports only OCLC OAuth 2.0 endpoints and flows
 
 ### Haven't Done:
 * Check for (number)vo in wrong places (haven't done)
