@@ -22,7 +22,22 @@ Written for week of 4/12-4/19:
 * Place fronttrunc and linemid entries into separate CSV (done)
 
 ### Doing
-* Read up on World Cat API and how it could be used to "fill in blanks"
+* Read up on World Cat API and how it could be used to "fill in blanks" and fill up even more information that the English Catalogue does not contain
+    * The (get) /bibs request looks to be the most promising: [WorldCat Search API v2](https://developer.api.oclc.org/wcv2#/Bibliographic%20Resources) (in the Bibliographic Resources section)
+        * Input query can include the following:
+            * Publisher
+            * Title
+            * Author
+            * Keyword
+        * We can get these query values from even "incomplete" row values
+        * The "datePublished" entry will help us significantly in reducing the results
+        * Returns a dictionary of records for a bunch of books with a lot of values:
+            * Publisher
+            * Subject
+            * Title
+            * Author
+            * Date
+        * Can probably come up with some probabilistic or deterministic method that helps us find the returned entry that matches the value with blanks
 
 ### Haven't Done:
 * Check for (number)vo in wrong places (haven't done)
