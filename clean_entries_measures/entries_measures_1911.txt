@@ -1,6 +1,0 @@
-Total Line Mid Entries: 0
-Percent of Line Mid Entries: 0.0
-Total Front Trunc Entries: 172
-Percent Front Trunc Entries: 0.035975737293453255
-Total Clean Entries: 4609
-Pattern: ^#(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+$|^##(?s:.*?)^THE ENGLISH CATALOGUE(?s:.*?)^[A-Z]{3,}(?s:.*?)^[A-Z]{3,}$|^#(?s:.*?)^(?:[A-Z\-\'\sÈ]+)(?s:.*?)^(?:[A-Z\-\'\sÈ]+)(?s:.*?)^(?:[A-Z\-\'\sÈ]+)$

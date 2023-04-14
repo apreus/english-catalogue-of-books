@@ -1,0 +1,19 @@
+Total Missing First Name Rows: 1628
+Percent Missing First Name Rows: 0.24054373522458627
+
+Total Missing Last Name Rows: 1628
+Percent Missing Last Name Rows: 0.24054373522458627
+
+Total Missing Format Rows: 1067
+Percent Missing Format Rows: 0.15765366430260047
+
+Total Missing Price Rows: 1896
+Percent Missing Price Rows: 0.2801418439716312
+
+Total Missing Publisher Rows: 0
+Percent Missing Publisher Rows: 0.0
+
+Total Missing Title Rows: 185
+Percent Missing Title Rows: 0.02733451536643026
+
+Total Dataframe Rows: 6768
