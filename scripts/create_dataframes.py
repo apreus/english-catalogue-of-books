@@ -4,7 +4,7 @@ import csv
 import sys
 from tqdm import tqdm
 import pandas as pd
-from create_clean_entries import argparse_create
+from create_entries import argparse_create
 
 def create_dataframes(file_path, year_string):
     """
@@ -181,40 +181,48 @@ def save_dataframes(full_df, df_paths, verbose):
     missing_price_df_path = df_paths[4]
     missing_publisher_df_path = df_paths[5]
     missing_title_df_path = df_paths[6]
-    full_data_measures_path = df_paths[7]
+    clean_df_path = df_paths[7]
+    full_data_measures_path = df_paths[8]
 
     total_full = len(full_df.index)
-    full_df.to_csv(full_df_path)
+    full_df.to_csv(full_df_path, index=False)
 
     missing_first_name_df = full_df[full_df["first_name"].isna()]
     total_missing_first_name = len(missing_first_name_df.index)
     percent_missing_first_name = total_missing_first_name / total_full
-    missing_first_name_df.to_csv(missing_first_df_path)
+    missing_first_name_df.to_csv(missing_first_df_path, index=False)
 
     missing_format_df = full_df[full_df["format"].isna()]
     total_missing_format = len(missing_format_df.index)
     percent_missing_format = total_missing_format / total_full
-    missing_format_df.to_csv(missing_format_df_path)
+    missing_format_df.to_csv(missing_format_df_path, index=False)
 
     missing_last_name_df = full_df[full_df["last_name"].isna()]
     total_missing_last_name = len(missing_last_name_df.index)
     percent_missing_last_name = total_missing_last_name / total_full
-    missing_last_name_df.to_csv(missing_last_df_path)
+    missing_last_name_df.to_csv(missing_last_df_path, index=False)
 
     missing_price_df = full_df[full_df["price"].isna()]
     total_missing_price = len(missing_price_df.index)
     percent_missing_price = total_missing_price / total_full
-    missing_price_df.to_csv(missing_price_df_path)
+    missing_price_df.to_csv(missing_price_df_path, index=False)
 
     missing_publisher_df = full_df[full_df["publisher"].isna()]
     total_missing_publisher = len(missing_publisher_df.index)
     percent_missing_publisher = total_missing_publisher / total_full
-    missing_publisher_df.to_csv(missing_publisher_df_path)
+    missing_publisher_df.to_csv(missing_publisher_df_path, index=False)
 
     missing_title_df = full_df[full_df["title"].isna()]
     total_missing_title = len(missing_title_df.index)
     percent_missing_title = total_missing_title / total_full
-    missing_title_df.to_csv(missing_title_df_path)
+    missing_title_df.to_csv(missing_title_df_path, index=False)
+
+    # Filter for Rows with No Null Values in Any Column
+    clean_df = full_df[full_df[["first_name", "format", "last_name", 
+                                "price", "publisher", "title"]].notnull().all(1)]
+    total_clean = len(clean_df.index)
+    percent_clean = total_clean / total_full
+    clean_df.to_csv(clean_df_path)
 
     if verbose:
         print(f"Total Missing First Name Rows: {total_missing_first_name}")
@@ -229,6 +237,8 @@ def save_dataframes(full_df, df_paths, verbose):
         print(f"Percent Missing Publisher Rows: {percent_missing_publisher}")
         print(f"Total Missing Title Rows: {total_missing_title}")
         print(f"Percent Missing Title Rows: {percent_missing_title}")
+        print(f"Total Clean Dataframe Rows: {total_clean}")
+        print(f"Percent Clean Dataframe Rows: {percent_clean}")
         print(f"Total Dataframe Rows: {total_full}")
 
     with open(full_data_measures_path, "w", newline='', encoding="utf-8", errors="ignore") as f:
@@ -244,6 +254,8 @@ def save_dataframes(full_df, df_paths, verbose):
         f.write(f"Percent Missing Publisher Rows: {percent_missing_publisher}\n\n")
         f.write(f"Total Missing Title Rows: {total_missing_title}\n")
         f.write(f"Percent Missing Title Rows: {percent_missing_title}\n\n")
+        f.write(f"Total Clean Dataframe Rows: {total_clean}\n")
+        f.write(f"Percent Clean Dataframe Rows: {percent_clean}\n\n")
         f.write(f"Total Dataframe Rows: {total_full}")
     
 if __name__ == "__main__":
@@ -272,7 +284,7 @@ if __name__ == "__main__":
             cwd_path = os.path.abspath(os.getcwd()).replace("scripts", "")
             file_path = cwd_path + os.path.join(folder_path, file_name)
 
-            full_dataframe_directory = "/full_data/"
+            full_dataframe_directory = "/full_dataframe/"
             full_df_path = f"{cwd_path}/dataframes/{full_dataframe_directory}/df_19{year_string}.csv"
 
             missing_first_dataframe_directory = "/missing_first_name/"
@@ -293,7 +305,10 @@ if __name__ == "__main__":
             missing_title_dataframe_directory = "/missing_title/"
             missing_title_df_path = f"{cwd_path}/dataframes/{missing_title_dataframe_directory}/df_19{year_string}.csv"
 
-            full_data_measures_directory = "full_data_measures"
+            clean_dataframe_directory = "/clean_dataframe/"
+            clean_df_path = f"{cwd_path}/dataframes/{clean_dataframe_directory}/df_19{year_string}.csv"
+
+            full_data_measures_directory = "dataframe_measures"
             full_data_measures_path = f"{cwd_path}/dataframes/{full_data_measures_directory}/df_measures_19{year_string}.txt"
 
             df_paths = [full_df_path, missing_first_df_path,
@@ -302,6 +317,7 @@ if __name__ == "__main__":
                         missing_price_df_path,
                         missing_publisher_df_path,
                         missing_title_df_path,
+                        clean_df_path,
                         full_data_measures_path]
             
             # Create dataframes

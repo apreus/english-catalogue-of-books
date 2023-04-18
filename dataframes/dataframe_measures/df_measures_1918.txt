@@ -16,4 +16,7 @@ Percent Missing Publisher Rows: 0.0
 Total Missing Title Rows: 151
 Percent Missing Title Rows: 0.034482758620689655
 
+Total Clean Dataframe Rows: 1946
+Percent Clean Dataframe Rows: 0.4443936971911395
+
 Total Dataframe Rows: 4379
