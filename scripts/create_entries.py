@@ -331,7 +331,7 @@ if __name__ == "__main__":
             file_path = cwd_path + os.path.join(folder_path, file_name)
             full_entries_directory = "/entries/full_entries/"
             clean_entries_directory = "/entries/clean_entries/"
-            clean_entries_measures_directory = "/entries/clean_entries_measures/"
+            clean_entries_measures_directory = "/entries/entries_measures/"
             front_trunc_entries_directory = "/entries/front_trunc_entries/"
             line_mid_entries_directory = "/entries/line_mid_entries/"
             
