@@ -14,7 +14,7 @@ Original Colab Notebook can be found in `/scripts/Parsing_ECB_1912_wi23.ipynb` a
 
 ## Data Schema
 
-Schema files can be found in `\schema`. The Lucid Chart document can be found [here](https://lucid.app/lucidchart/4d30c38e-c769-443d-8c82-fdf6894c5a80/edit?invitationId=inv_f8bb8f35-4b80-400a-8e9b-d774e9de7dbf). Included below is an image of the schema.
+Schema files can be found in `\schema`. The Lucid Chart document can be found [here](https://lucid.app/lucidchart/4d30c38e-c769-443d-8c82-fdf6894c5a80/edit?invitationId=inv_f8bb8f35-4b80-400a-8e9b-d774e9de7dbf) (login to Lucid Chart is required). Included below is an image of the schema.
 
 ![Schema](./schema/English_Catalogue_of_Books_Data_Schema.png)
 
