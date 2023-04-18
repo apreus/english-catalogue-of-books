@@ -5,5 +5,8 @@ Total Front Trunc Entries: 681
 Percent Front Trunc Entries: 0.03944167728483725
 
 Total Clean Entries: 16585
+Percent Clean Entries: 0.9605583227151627
+
+Total Full Entries: 17266
 
 Pattern: ^#(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+$|^##(?s:.*?)^THE ENGLISH CATALOGUE(?s:.*?)^[A-Z]{3,}(?s:.*?)^[A-Z]{3,}$|^#(?s:.*?)^(?:[A-Z\-\'\sÈ]+)(?s:.*?)^(?:[A-Z\-\'\sÈ]+)(?s:.*?)^(?:[A-Z\-\'\sÈ]+)$
