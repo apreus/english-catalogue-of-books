@@ -1,3 +1,3 @@
 tqdm==4.65.0
-pandas==2.0.0
+pandas==2.0.0 # Be very careful with this as a lot of libraries that use Pandas are not caught up with 2.0.0
 argparse==1.4.0
