@@ -10,13 +10,13 @@ Run ``(python prefix) pip install -r requirements.txt``
 
 Python prefixes depend on device, but the most common ones are: py, py3, python, and python3.
 
-## Creating Clean Entries from scratch
+## Creating Entries from scratch
 
 To print out entry metrics during the running process:
-``(python prefix) create_clean_entries.py --verbose True``
+``(python prefix) create_entries.py --verbose True``
 
 To not print out entry metrics during the running process:
-``(python prefix) create_clean_entries.py --verbose False`` or simply ``(python prefix) create_clean_entries.py``
+``(python prefix) create_entries.py --verbose False`` or simply ``(python prefix) create_clean_entries.py``
 
 ## Creating Dataframe data from scratch
 
