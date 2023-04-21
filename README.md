@@ -20,14 +20,16 @@ Schema files can be found in `\schema`. The Lucid Chart document can be found [h
 
 ## TODOs
 
-Written for week of 4/12-4/19:
+Written for week of 4/21 and onwards:
 
-### Done
-* Write and Run script up until the finish of John's Google Colab Doc (done)
-* Checked for missing major column values and placed them in different CSVs (done)
-* Place fronttrunc and linemid entries into separate CSV (done)
+### Will Do
+* Check for different ways of splitting entries
+    * Look at end of entries for date and year
+    * Add different patterns for capturing date and year
+    * Try Fuzzy Regex packages
+        * Consider TRE (The free and portable approximate regex matching library)
 
-### Doing
+### Will Wait
 * Read up on World Cat API and how it could be used to "fill in blanks" and fill up even more information that the English Catalogue does not contain
     * The (get) /bibs request looks to be the most promising: [WorldCat Search API v2](https://developer.api.oclc.org/wcv2#/Bibliographic%20Resources) (in the Bibliographic Resources section)
         * Input query can include the following:
@@ -47,14 +49,3 @@ Written for week of 4/12-4/19:
     * Potential Python Wrapper Library that helps with making World Cat API requests: [bookops-worldcat](https://pypi.org/project/bookops-worldcat/)
         * [Documentation](https://bookops-cat.github.io/bookops-worldcat/0.5/)
         * Supports only OCLC OAuth 2.0 endpoints and flows
-
-### Haven't Done:
-* Check for (number)vo in wrong places (haven't done)
-* Check for currency in wrong places (haven't done)
-* Check for different/wrong years in entries (haven't done)
-
-### Will Wait
-* Check total books vs how many entries captured (wait on this)
-    * Have to read total books
-    * ~ 30 entries per page
-    * Should be getting rid of secondary entries
