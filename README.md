@@ -31,6 +31,7 @@ Written for week of 4/21 and onwards:
         * Some things that might tip us off to them being two separate entries:
             * multiple (number)vo
             * multiple names being surrounded by ()
+* Only getting around 100 pages or so (headers splitting might be wrong)
 
 ### Will Do
 * Check for different ways of splitting entries
