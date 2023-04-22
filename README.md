@@ -22,6 +22,16 @@ Schema files can be found in `\schema`. The Lucid Chart document can be found [h
 
 Written for week of 4/21 and onwards:
 
+### Notes
+* May need lab devices for computation
+    * Fuzzy Regex a lot more computationally heavy than regular Regex
+        * More patterns to consider
+* Potentially split by non-year-month values
+    * Consider 2+ entries next to each other with only one year-month value for the last entry
+        * Some things that might tip us off to them being two separate entries:
+            * multiple (number)vo
+            * multiple names being surrounded by ()
+
 ### Will Do
 * Check for different ways of splitting entries
     * Look at end of entries for date and year
