@@ -102,6 +102,7 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     # Get ecb_content and back_matter
     patternFront = patternFrontDict[year_string]
     text_raw = re.split(patternFront, contents)
+
     #front_matter = text_raw[0]
     ecb_content = text_raw[1]
     appendix_pattern = appendixPatternDict[year_string]
@@ -134,7 +135,7 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     
     ecb_pe = [re.sub(fr"(\W{year_string}\.?$)", "\\1<ENTRY_CUT>", page, flags=re.M) for page in ecb_pe]
     ecb_pe = [re.split(r"<ENTRY_CUT>", page, flags=re.M) for page in ecb_pe] 
-    
+
     entries = [
         re.sub(r"\n", " ", entry.strip()) for entries in ecb_pe for entry in entries
     ]
@@ -205,8 +206,8 @@ def clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries
                                       year_string, cwd_path, full_entries_directory,
                                       clean_entries_directory,
                                       clean_entries_measures_directory,
+                                      front_trunc_entries_directory,
                                       line_mid_entries_directory,
-                                      front_trunc_entries_directory,  
                                       pattern):
     """
     Prints clean entries from a single Princeton OCR file's year to a CSV file and
@@ -294,7 +295,8 @@ if __name__ == "__main__":
 
     args = argparse_create((sys.argv[1:]))
 
-    verbose_string = args.verbose
+    #verbose_string = args.verbose
+    verbose_string = "True"
 
     if verbose_string == "True":
         verbose = True

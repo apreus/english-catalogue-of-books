@@ -20,25 +20,17 @@ Schema files can be found in `\schema`. The Lucid Chart document can be found [h
 
 ## TODOs
 
-Written for week of 4/21 and onwards:
+Written for week of 5/3 and onwards:
 
 ### Notes
-* May need lab devices for computation
-    * Fuzzy Regex a lot more computationally heavy than regular Regex
-        * More patterns to consider
-* Potentially split by non-year-month values
-    * Consider 2+ entries next to each other with only one year-month value for the last entry
-        * Some things that might tip us off to them being two separate entries:
-            * multiple (number)vo
-            * multiple names being surrounded by ()
-* Only getting around 100 pages or so (headers splitting might be wrong)
-
-### Will Do
-* Check for different ways of splitting entries
-    * Look at end of entries for date and year
-    * Add different patterns for capturing date and year
-    * Try Fuzzy Regex packages
-        * Consider TRE (The free and portable approximate regex matching library)
+* Consider the following distance functions for an alternate implemention for string matching.For two strings, 
+a and b:
+    * Levenshtein Distance: The minimal number of insertions, deletions, and symbol substitutions required to transform a into b.
+    * Damerau Levenstein: Like the Levenstein Distance, but you can also use transpositions (swapping of adjacent symbols).
+    * Optimal String Alignment Distance: Like Damerau Levenstein, but you are not allowed to apply multiple transformations on a same substring (e.g. first transpose two symbols, then insert a third between them).
+    * Longest Common Substring: Based on the similarity between characters in the text to express the similarity between texts.
+    * Edit Distance: The minimum number of transformations required to convert the string.
+    * Jaro Similarity: Not sure how to summarize this [Link](https://en.wikipedia.org/wiki/Jaro%E2%80%93Winkler_distance)
 
 ### Will Wait
 * Read up on World Cat API and how it could be used to "fill in blanks" and fill up even more information that the English Catalogue does not contain
