@@ -1,3 +1,9 @@
 tqdm==4.65.0
 pandas==2.0.0 # Be very careful with this as a lot of libraries that use Pandas are not caught up with 2.0.0
 argparse==1.4.0
+scikit-learn==1.2.2
+sparse-dot-topn==0.3.4
+numpy==1.24.3
+scipy==1.10.1
+nltk==3.8.1
+strsimpy==0.2.1
