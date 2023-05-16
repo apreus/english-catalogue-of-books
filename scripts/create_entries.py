@@ -208,7 +208,7 @@ def clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries
                                       clean_entries_measures_directory,
                                       front_trunc_entries_directory,
                                       line_mid_entries_directory,
-                                      pattern):
+                                      pattern = ""):
     """
     Prints clean entries from a single Princeton OCR file's year to a CSV file and
     prints clean entries measures from a single Princeton OCR file's year to a text
@@ -289,7 +289,8 @@ def clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries
         f.write(f"Total Clean Entries: {len_clean_entries}\n")
         f.write(f"Percent Clean Entries: {percent_clean_entries}\n\n")
         f.write(f"Total Full Entries: {len_full_entries}\n\n")
-        f.write(f"Pattern: {pattern}")
+        if len(pattern) > 0:
+            f.write(f"Pattern: {pattern}")
 
 if __name__ == "__main__":
 
