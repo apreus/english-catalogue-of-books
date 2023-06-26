@@ -1,11 +1,11 @@
-Total Line Mid Entries: 670
-Percent of Line Mid Entries: 0.003599847409453092
+Total Line Mid Entries: 309
+Percent of Line Mid Entries: 0.005978870786734259
 
-Total Front Trunc Entries: 28673
-Percent Front Trunc Entries: 0.1540573504048485
+Total Front Trunc Entries: 16583
+Percent Front Trunc Entries: 0.32086606555473857
 
-Total Clean Entries: 156870
-Percent Clean Entries: 0.842847855404338
+Total Clean Entries: 34863
+Percent Clean Entries: 0.6745675476955226
 
-Total Full Entries: 186119
+Total Full Entries: 51682
 
