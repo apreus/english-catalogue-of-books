@@ -7,11 +7,11 @@ import argparse
 import pandas as pd
 from strsimpy.cosine import Cosine
 import numpy as np
-from scipy.signal import argrelextrema
 from scipy.signal import find_peaks
 from create_entries import clean_entries_and_measures_to_csv
 
-CUTOFF_POINT_SCORE = 0.29
+CUTOFF_POINT_SCORE = 0.40
+CLOSE_INDEX_THRESHOLD = 5
 
 patternFrontDict = {
     "00": r"centimetres.\n.*\n",
@@ -122,6 +122,7 @@ def scaled_fuzzy_matching(file_path, year_string):
             text = page[text_index: text_index + segment_length]
             segment.append(text)
             segments.append(segment)
+        # break
 
     # Create Month Strings to be matched
     month_strings = []
@@ -227,6 +228,7 @@ def scaled_fuzzy_matching(file_path, year_string):
     
     # Get desirable cutoff points
     cutoff_points_dict = {}
+    score_cutoff_points_dict = {}
     for key in tqdm(desirable_segment_arrays_dict, desc="Get Desirable Cutoff Points"):
         desirable_segment_arrays = desirable_segment_arrays_dict[key]
         for segment_array in desirable_segment_arrays:
@@ -264,15 +266,39 @@ def scaled_fuzzy_matching(file_path, year_string):
                 if best_score > 0:
                     if segment_page not in cutoff_points_dict:
                         cutoff_points_dict[segment_page] = []
+                    if segment_page not in score_cutoff_points_dict:
+                        score_cutoff_points_dict[segment_page] = []
                     cutoff_points_array = cutoff_points_dict[segment_page]
-                    cutoff_points_array.append(cutoff_point)
+                    score_cutoff_points_array = score_cutoff_points_dict[segment_page]
+                    if cutoff_point not in cutoff_points_array:
+                        exists_close = False
+                        replaced = False
+                        # Remove low score points that are close to high score points
+                        for cutoff_point_index in range(len(cutoff_points_array)):
+                            examining_cutoff_point = cutoff_points_array[cutoff_point_index]
+                            examining_cutoff_point_score = score_cutoff_points_array[cutoff_point_index]
+                            if abs(cutoff_point - examining_cutoff_point) < CLOSE_INDEX_THRESHOLD \
+                                                    and best_score <= examining_cutoff_point_score:
+                                exists_close = True
+                            if abs(cutoff_point - examining_cutoff_point) < CLOSE_INDEX_THRESHOLD \
+                                                    and best_score > examining_cutoff_point_score:
+                                cutoff_points_array[cutoff_point_index] = cutoff_point
+                                score_cutoff_points_array[cutoff_point_index] = best_score
+                                replaced = True
+                        if not exists_close and not replaced:
+                            cutoff_points_array.append(cutoff_point)
+                            score_cutoff_points_array.append(best_score)
                     cutoff_points_dict[segment_page] = cutoff_points_array
+                    score_cutoff_points_dict[segment_page] = score_cutoff_points_array
     
     # Get entries
     for page_index in tqdm(range(len(ecb_pages)), desc="Get Entries"):
         if page_index in cutoff_points_dict:
             page = ecb_pages[page_index]
             cutoff_points_array = cutoff_points_dict[page_index]
+            # TODO investigate the below line
+            #print(zip(cutoff_points_array, cutoff_points_array[1:]+[None]))
+            cutoff_points_array.sort()
             page_entries = [page[i:j] for i,j in zip(cutoff_points_array, cutoff_points_array[1:]+[None])]
             cleaned_page_entries = []
             for page_entry_index in range(len(page_entries)):
@@ -323,6 +349,7 @@ if __name__ == "__main__":
 
     # Only cover years 1908 and 1918
     for year in tqdm(range(8,19)):
+    #for year in tqdm(range(10,19)):
         if year != 21:
             if year < 10:
                 year = "0" + str(year)
