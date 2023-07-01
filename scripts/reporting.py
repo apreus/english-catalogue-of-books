@@ -8,12 +8,12 @@ import pandas as pd
 
 def histogram_strings_by_length(
         path,
-        bins=[i*5 for i in range(80)],
+        bins=range(0, 400, 5),
         underflow_lim=30,
-        overflow_lim=250,
+        overflow_lim=300,
         show_over_under=False,
         drop_nulls=False,
-        title='Lengths of full entries',
+        title='Lengths of entries',
         xlabel='Number of characters in an entry',
         ylabel='Number of entries found'
 ):
@@ -26,18 +26,30 @@ def histogram_strings_by_length(
     path : str
         The path to the data to histogram
 
-    bins : int or list-like
+    bins : int or list-like, default range(0, 400, 5)
         The number of bins in the histogram or a sequence of bin edges
 
-    underflow_lim : int
+    underflow_lim : int, default 30
         The minimum number of characters expected in any string
 
-    overflow_lim : int
+    overflow_lim : int, default 300
         The maximum number of characters expected in any string
 
     show_under_over : bool
         Show under- and overflow boundaries on the plot and print the
         number of strings outside those limits
+
+    drop_nulls : bool, default True
+        Remove null values from the data set read from the file.
+
+    title : str, default 'Lengths of entries'
+        Title for the histogram plot
+
+    xlabel : str, default 'Number of characters in an entry'
+        Horizontal axis label
+
+    ylabel : str, default 'Number of entries found'
+        Vertical axis label
 
     Returns
     -------
@@ -54,7 +66,7 @@ def histogram_strings_by_length(
         matplotlib axes object for the histogram
     '''
 
-    strings = pd.read_csv(path, header=None).squeeze()
+    strings = pd.read_csv(path, header=None)[0]
 
     if drop_nulls:
         strings = strings.loc[~strings.isna()]
