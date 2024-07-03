@@ -5,56 +5,6 @@ import sys
 from tqdm import tqdm
 import argparse
 
-patternFrontDict = {
-    "00": r"centimetres.\n.*\n",
-    "01": r"centimetres.\n.*\n",
-    "02": r"centimetres.\n.*\n",
-    "03": r"centimetres.\n.*\n",
-    "04": r"centimetres.\n.*\n",
-    "05": r"centimetres.\n.*\n",
-    "06": r"centimetres.\n.*\n",
-    "07": r"centimetres.\n.*\n",
-    "08": r"centimetres.\n.*\n",
-    "09": r"centimetres.\n.*\n",
-    "10": r"THE ENGLISH CATALOGUE\nACHARD\nACTS",
-    "11": r"centimetres.\n.*\n",
-    "12": r"centimetres.\n.*\n",
-    "13": r"centimetres.\n.*\n",
-    "14": r"centimetres.\n.*\n",
-    "15": r"centimetres.\n.*\n",
-    "16": r"centimetres.\n.*\n",
-    "17": r"centimetres.\n.*\n",
-    "18": r"centin etres.\n.*\n",
-    "19": r"centimetres.\n.*\n",
-    "20": r"centimetres.\n.*\n.*\n.*\n",
-    "22": r"centimetres.*.\n.*\n",
-}
-
-appendixPatternDict = {
-    "00": r"ENGLISH CATALOGUE APPENDIX\nAN\nBI",
-    "01": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1901",
-    "02": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1902",
-    "03": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1903",
-    "04": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1904",
-    "05": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1905",
-    "06": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1906",
-    "07": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1907",
-    "08": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1908",
-    "09": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1909",
-    "10": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1910",
-    "11": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1911",
-    "12": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1912",
-    "13": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1913",
-    "14": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1914",
-    "15": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1915",
-    "16": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1916",
-    "17": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1917",
-    "18": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1918",
-    "19": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1918", # OCR had incorrect year
-    "20": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1920",
-    "22": r"WITH LISTS OF THEIR\nPUBLICATIONS, 1922",
-}
-
 def argparse_create(args):
     """
     Parser to parse this script's arguments that pertain to the running of this code.
@@ -77,6 +27,12 @@ def argparse_create(args):
 
     return parsed_args
 
+# Function to remove patterns from a page
+def remove_patterns(page, patterns):
+    for pattern in patterns:
+        page = re.sub(pattern, '', page, flags=re.MULTILINE)
+    return page
+
 def get_clean_entries(year_string, file_path, pattern, verbose):
     """
     Gets clean entries from a single Princeton OCR file's year.
@@ -98,10 +54,37 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     infile = open(file_path, "r", encoding="utf-8", errors="ignore")
     contents = infile.read()
     infile.close()
+
+    # Load splitters (patternFrontDict, appendixPatternDict, and yearPatterns) from splitters.txt
+    splitters_file_path = "splitters.txt"
+
+    try:
+        with open(splitters_file_path, "r") as file:
+            splitters = file.read()
+        exec(splitters, globals())
+        
+        # Ensure the dictionaries are defined
+        if 'patternFrontDict' not in globals():
+            raise NameError("patternFrontDict is not defined in splitters.txt")
+        if 'appendixPatternDict' not in globals():
+            raise NameError("appendixPatternDict is not defined in splitters.txt")
+        if 'yearPatterns' not in globals():
+            raise NameError("yearPatterns is not defined in splitters.txt")
+
+    except FileNotFoundError:
+        print(f"Error: The file {splitters_file_path} was not found.")
+    except NameError as ne:
+        print(f"Error: {ne}")
     
     # Get ecb_content and back_matter
     patternFront = patternFrontDict[year_string]
     text_raw = re.split(patternFront, contents)
+
+    if len(text_raw) < 2:
+        print("The year that's not working is: ", year_string)
+        print(patternFront)
+        raise IndexError(f"No match found for appendix_pattern: {appendix_pattern} in ecb_content.")
+
 
     #front_matter = text_raw[0]
     ecb_content = text_raw[1]
@@ -127,13 +110,17 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     patterns = [pat1, pat2, pat3]
     pattern_matches = [pat1_matches, pat2_matches, pat3_matches]
     """
-
-    ecb_pe = [
-        re.sub(pattern, "", page, flags=re.M)  # this flag is for multiline regex
-        for page in ecb_pages
-    ]
     
-    ecb_pe = [re.sub(fr"(\W{year_string}\.?$)", "\\1<ENTRY_CUT>", page, flags=re.M) for page in ecb_pe]
+    # Apply the function to each page
+    ecb_pe = [remove_patterns(page, pattern) for page in ecb_pages]
+
+    # ecb_pe = [
+    #     re.sub(pattern, "", page, flags=re.M)  # this flag is for multiline regex
+    #     for page in ecb_pages
+    # ]
+    
+    entry_terminator_regex = r'(\W({})\.?$)'.format('|'.join(yearPatterns[year_string]))
+    ecb_pe = [re.sub(entry_terminator_regex, "\\1<ENTRY_CUT>", page, flags=re.M) for page in ecb_pe]
     ecb_pe = [re.split(r"<ENTRY_CUT>", page, flags=re.M) for page in ecb_pe] 
 
     entries = [
@@ -307,45 +294,53 @@ if __name__ == "__main__":
     # Iterate through Princeton OCR folder
     folder_path = '/princeton_years/'
 
-    # Initiate patterns
-    pat1 = r"^#(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+$"
-    pat2 = r"^##(?s:.*?)^THE ENGLISH CATALOGUE(?s:.*?)^[A-Z]{3,}(?s:.*?)^[A-Z]{3,}$"
-    caps_header = r"^(?:[A-Z\-\'\sÈ]+)"
-    pat3 = r"^#(?s:.*?){}(?s:.*?){}(?s:.*?){}$".format(
-        caps_header, caps_header, caps_header
-    )
-    pat4 = fr"{pat1}|{pat2}"
-    pat5 = fr"{pat2}|{pat3}"
-    pat6 = fr"{pat1}|{pat3}"
+    # # Initiate patterns
+    # pat1 = r"^#(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+$"
+    # pat2 = r"^##(?s:.*?)^THE ENGLISH CATALOGUE(?s:.*?)^[A-Z]{3,}(?s:.*?)^[A-Z]{3,}$"
+    # caps_header = r"^(?:[A-Z\-\'\sÈ]+)"
+    # pat3 = r"^#(?s:.*?){}(?s:.*?){}(?s:.*?){}$".format(
+    #     caps_header, caps_header, caps_header
+    # )
+    # pat4 = fr"{pat1}|{pat2}"
+    # pat5 = fr"{pat2}|{pat3}"
+    # pat6 = fr"{pat1}|{pat3}"
 
-    # Currently using this one as it is the most consistent
-    pat7 = fr"{pat1}|{pat2}|{pat3}"
+    # # Currently using this one as it is the most consistent
+    # pat7 = fr"{pat1}|{pat2}|{pat3}"
 
-    # Only cover years 1908 and 1918
-    for year in tqdm(range(8,19)):
-        if year != 21:
-            if year < 10:
-                year = "0" + str(year)
+    # Only cover years 1906 and 1922
+    for year in tqdm(range(5,23)):
+        if year < 10:
+            year = "0" + str(year)
+        
 
-            # Get appropriate paths 
-            year_string = str(year)
-            file_name = "ecb_19" + str(year) + ".txt" 
-            cwd_path = os.path.abspath(os.getcwd()).replace("scripts", "")
-            file_path = cwd_path + os.path.join(folder_path, file_name)
-            full_entries_directory = "/entries/full_entries/"
-            clean_entries_directory = "/entries/clean_entries/"
-            clean_entries_measures_directory = "/entries/entries_measures/"
-            front_trunc_entries_directory = "/entries/front_trunc_entries/"
-            line_mid_entries_directory = "/entries/line_mid_entries/"
-            
-            pattern = pat7
-            full_entries, clean_entries, clean_entries_measures, line_mid_entries, front_trunc_entries = get_clean_entries(year_string, 
-                                                                                                           file_path, 
-                                                                                                           pattern, verbose)   
-            clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries_measures, 
-                                    line_mid_entries, front_trunc_entries, 
-                                    year_string, cwd_path, full_entries_directory,
-                                    clean_entries_directory,
-                                    clean_entries_measures_directory, 
-                                    front_trunc_entries_directory,
-                                    line_mid_entries_directory, pattern)
+        # Get appropriate paths 
+        year_string = str(year)
+        file_name = "ecb_19" + str(year) + ".txt" 
+        cwd_path = os.path.abspath(os.getcwd()).replace("scripts", "")
+        file_path = cwd_path + os.path.join(folder_path, file_name)
+        full_entries_directory = "/entries/full_entries/"
+        clean_entries_directory = "/entries/clean_entries/"
+        clean_entries_measures_directory = "/entries/entries_measures/"
+        front_trunc_entries_directory = "/entries/front_trunc_entries/"
+        line_mid_entries_directory = "/entries/line_mid_entries/"
+        
+        # Define multiple header patterns
+        header_patterns = [
+            r"(^\b[A-Z ]+\b\s?\n)",  # Capital heading pattern
+            r"(##(?s:.*?)$)",  # Page number pattern
+            r"(^.?19{}.?\n)".format(year), # Header year pattern
+            r"(^\d+\n)", # Random page numbers
+        ]
+
+        pattern = header_patterns
+        full_entries, clean_entries, clean_entries_measures, line_mid_entries, front_trunc_entries = get_clean_entries(year_string, 
+                                                                                                    file_path, 
+                                                                                                    pattern, verbose)   
+        clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries_measures, 
+                                line_mid_entries, front_trunc_entries, 
+                                year_string, cwd_path, full_entries_directory,
+                                clean_entries_directory,
+                                clean_entries_measures_directory, 
+                                front_trunc_entries_directory,
+                                line_mid_entries_directory, pattern)
