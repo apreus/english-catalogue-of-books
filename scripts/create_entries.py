@@ -35,11 +35,11 @@ def remove_patterns(page, patterns):
 
 def get_clean_entries(year_string, file_path, pattern, verbose):
     """
-    Gets clean entries from a single Princeton OCR file's year.
+    Gets clean entries from a single new_text_files OCR file's year.
 
     Arguments:
         year_string: String; string representation of year.
-        file_path: String; Princeton OCR full file path.
+        file_path: String; new_text_files OCR full file path.
         pattern: Raw String; header pattern string.
         verbose: Boolean; If true, prints out metrics into CLI, and if false, does not print out entries.
     
@@ -83,14 +83,21 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     if len(text_raw) < 2:
         print("The year that's not working is: ", year_string)
         print(patternFront)
-        raise IndexError(f"No match found for appendix_pattern: {appendix_pattern} in ecb_content.")
+        raise IndexError(f"No match found for patternFront: {patternFront} in ecb_content.")
 
 
     #front_matter = text_raw[0]
     ecb_content = text_raw[1]
     appendix_pattern = appendixPatternDict[year_string]
     appendix_list = re.split(appendix_pattern, ecb_content, flags=re.DOTALL)
+
+    if len(appendix_list) < 2:
+        print("The year that's not working is: ", year_string)
+        print(appendix_pattern)
+        raise IndexError(f"No match found for appendix_pattern: {appendix_pattern} in ecb_content.")
+
     ecb_content = appendix_list[0]
+ 
     #back_matter = appendix_list[1]
 
     # Get pages
@@ -197,8 +204,8 @@ def clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries
                                       line_mid_entries_directory,
                                       pattern = ""):
     """
-    Prints clean entries from a single Princeton OCR file's year to a CSV file and
-    prints clean entries measures from a single Princeton OCR file's year to a text
+    Prints clean entries from a single new_text_files OCR file's year to a CSV file and
+    prints clean entries measures from a single new_text_files OCR file's year to a text
     file.
 
     Arguments:
@@ -292,7 +299,10 @@ if __name__ == "__main__":
         verbose = False
 
     # Iterate through Princeton OCR folder
-    folder_path = '/princeton_years/'
+    old_data_folder_path = '/princeton_years/'
+
+    # Iterate through new_text_files OCR folder
+    new_data_folder_path = '/new_text_files/'
 
     # # Initiate patterns
     # pat1 = r"^#(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+$"
@@ -308,7 +318,7 @@ if __name__ == "__main__":
     # # Currently using this one as it is the most consistent
     # pat7 = fr"{pat1}|{pat2}|{pat3}"
 
-    # Only cover years 1906 and 1922
+    # Only cover years 1905 and 1922
     for year in tqdm(range(5,23)):
         if year < 10:
             year = "0" + str(year)
@@ -316,9 +326,18 @@ if __name__ == "__main__":
 
         # Get appropriate paths 
         year_string = str(year)
-        file_name = "ecb_19" + str(year) + ".txt" 
+
         cwd_path = os.path.abspath(os.getcwd()).replace("scripts", "")
-        file_path = cwd_path + os.path.join(folder_path, file_name)
+
+        if year == 19 or year == 21:
+            file_name = "ecb_19" + str(year) + "_nypl_070724.txt"
+            file_path = cwd_path + os.path.join(new_data_folder_path, file_name)
+
+        else:
+            file_name = "ecb_19" + str(year) + ".txt" 
+            file_path = cwd_path + os.path.join(old_data_folder_path, file_name)
+            
+
         full_entries_directory = "/entries/full_entries/"
         clean_entries_directory = "/entries/clean_entries/"
         clean_entries_measures_directory = "/entries/entries_measures/"

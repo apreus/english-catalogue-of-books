@@ -136,9 +136,9 @@ def create_dataframes(file_path, year_string):
     full_df["price"] = full_df["price_dirty"].str.replace(r"([ds]),", "\\1.", regex=True)
     full_df["price"] = full_df["price"].str.replace(r"s\.?\s+", "s. ", regex=True)
     full_df["price"] = full_df["price"].str.strip(",\s")
-    full_df["shillings"] = full_df["price"].str.extract(r"(\d+)s").fillna(0).astype(int)
-    full_df["pence"] = full_df["price"].str.extract(r"(\d+)d").fillna(0).astype(int)
-    full_df["price_in_pounds"] = full_df["pence"] / 240 + full_df["shillings"] / 20
+    # full_df["shillings"] = full_df["price"].str.extract(r"(\d+)s").fillna(0).astype(int)
+    # full_df["pence"] = full_df["price"].str.extract(r"(\d+)d").fillna(0).astype(int)
+    # full_df["price_in_pounds"] = full_df["pence"] / 240 + full_df["shillings"] / 20
 
     full_df["original_entry"] = pd.Series(main_entries)
     full_df["author_name"] = full_df["first_name"].str.cat(full_df["last_name"], sep=" ")
@@ -150,7 +150,7 @@ def create_dataframes(file_path, year_string):
             "title",
             "publisher",
             "price",
-            "price_in_pounds",
+            # "price_in_pounds",
             "format",
             "original_entry",
             "author_name",
@@ -271,57 +271,56 @@ if __name__ == "__main__":
     # Iterate through Clean Entries Folder
     folder_path = '/entries/clean_entries/'
 
-    # Only cover years 1908 and 1918
-    for year in tqdm(range(8,19)):
-        if year != 21:
-            if year < 10:
-                year = "0" + str(year)
+    # Only cover years 1905 and 1922
+    for year in tqdm(range(5,23)):
+        if year < 10:
+            year = "0" + str(year)
 
-            # Get appropriate paths.
+        # Get appropriate paths.
 
-            year_string = str(year)
-            file_name = "entries_19" + str(year) + ".csv" 
-            cwd_path = os.path.abspath(os.getcwd()).replace("scripts", "")
-            file_path = cwd_path + os.path.join(folder_path, file_name)
+        year_string = str(year)
+        file_name = "entries_19" + str(year) + ".csv" 
+        cwd_path = os.path.abspath(os.getcwd()).replace("scripts", "")
+        file_path = cwd_path + os.path.join(folder_path, file_name)
 
-            full_dataframe_directory = "/full_dataframe/"
-            full_df_path = f"{cwd_path}/dataframes/{full_dataframe_directory}/df_19{year_string}.csv"
+        full_dataframe_directory = "/full_dataframe/"
+        full_df_path = f"{cwd_path}/dataframes/{full_dataframe_directory}/df_19{year_string}.csv"
 
-            missing_first_dataframe_directory = "/missing_first_name/"
-            missing_first_df_path = f"{cwd_path}/dataframes/{missing_first_dataframe_directory}/df_19{year_string}.csv"
-            
-            missing_format_dataframe_directory = "/missing_format/"
-            missing_format_df_path = f"{cwd_path}/dataframes/{missing_format_dataframe_directory}/df_19{year_string}.csv"
+        missing_first_dataframe_directory = "/missing_first_name/"
+        missing_first_df_path = f"{cwd_path}/dataframes/{missing_first_dataframe_directory}/df_19{year_string}.csv"
+        
+        missing_format_dataframe_directory = "/missing_format/"
+        missing_format_df_path = f"{cwd_path}/dataframes/{missing_format_dataframe_directory}/df_19{year_string}.csv"
 
-            missing_last_dataframe_directory = "/missing_last_name/"
-            missing_last_df_path = f"{cwd_path}/dataframes/{missing_last_dataframe_directory}/df_19{year_string}.csv"
+        missing_last_dataframe_directory = "/missing_last_name/"
+        missing_last_df_path = f"{cwd_path}/dataframes/{missing_last_dataframe_directory}/df_19{year_string}.csv"
 
-            missing_price_dataframe_directory = "/missing_price/"
-            missing_price_df_path = f"{cwd_path}/dataframes/{missing_price_dataframe_directory}/df_19{year_string}.csv"
+        missing_price_dataframe_directory = "/missing_price/"
+        missing_price_df_path = f"{cwd_path}/dataframes/{missing_price_dataframe_directory}/df_19{year_string}.csv"
 
-            missing_publisher_dataframe_directory = "/missing_publisher/"
-            missing_publisher_df_path = f"{cwd_path}/dataframes/{missing_publisher_dataframe_directory}/df_19{year_string}.csv"
+        missing_publisher_dataframe_directory = "/missing_publisher/"
+        missing_publisher_df_path = f"{cwd_path}/dataframes/{missing_publisher_dataframe_directory}/df_19{year_string}.csv"
 
-            missing_title_dataframe_directory = "/missing_title/"
-            missing_title_df_path = f"{cwd_path}/dataframes/{missing_title_dataframe_directory}/df_19{year_string}.csv"
+        missing_title_dataframe_directory = "/missing_title/"
+        missing_title_df_path = f"{cwd_path}/dataframes/{missing_title_dataframe_directory}/df_19{year_string}.csv"
 
-            clean_dataframe_directory = "/clean_dataframe/"
-            clean_df_path = f"{cwd_path}/dataframes/{clean_dataframe_directory}/df_19{year_string}.csv"
+        clean_dataframe_directory = "/clean_dataframe/"
+        clean_df_path = f"{cwd_path}/dataframes/{clean_dataframe_directory}/df_19{year_string}.csv"
 
-            full_data_measures_directory = "dataframe_measures"
-            full_data_measures_path = f"{cwd_path}/dataframes/{full_data_measures_directory}/df_measures_19{year_string}.txt"
+        full_data_measures_directory = "dataframe_measures"
+        full_data_measures_path = f"{cwd_path}/dataframes/{full_data_measures_directory}/df_measures_19{year_string}.txt"
 
-            df_paths = [full_df_path, missing_first_df_path,
-                        missing_format_df_path,
-                        missing_last_df_path,
-                        missing_price_df_path,
-                        missing_publisher_df_path,
-                        missing_title_df_path,
-                        clean_df_path,
-                        full_data_measures_path]
-            
-            # Create dataframes
-            full_df = create_dataframes(file_path, year_string)
+        df_paths = [full_df_path, missing_first_df_path,
+                    missing_format_df_path,
+                    missing_last_df_path,
+                    missing_price_df_path,
+                    missing_publisher_df_path,
+                    missing_title_df_path,
+                    clean_df_path,
+                    full_data_measures_path]
+        
+        # Create dataframes
+        full_df = create_dataframes(file_path, year_string)
 
-            # Save dataframes (and relevant dataframe measures)
-            save_dataframes(full_df, df_paths, verbose)
+        # Save dataframes (and relevant dataframe measures)
+        save_dataframes(full_df, df_paths, verbose)
