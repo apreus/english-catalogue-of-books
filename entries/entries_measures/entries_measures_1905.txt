@@ -1,12 +1,12 @@
-Total Line Mid Entries: 2
-Percent of Line Mid Entries: 0.00010768899418479432
+Total Line Mid Entries: 10
+Percent of Line Mid Entries: 0.0005457621568520439
 
-Total Front Trunc Entries: 1371
-Percent Front Trunc Entries: 0.07382080551367651
+Total Front Trunc Entries: 1964
+Percent Front Trunc Entries: 0.10712922053128239
 
-Total Clean Entries: 17200
-Percent Clean Entries: 0.9261253499892311
+Total Clean Entries: 16369
+Percent Clean Entries: 0.8928707794687176
 
-Total Full Entries: 18572
+Total Full Entries: 18333
 
 Pattern: ['(^\\b[A-Z ]+\\b\\s?\\n)', '(##(?s:.*?)$)', '(^.?1905.?\\n)', '(^\\d+\\n)']

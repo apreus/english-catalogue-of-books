@@ -22,6 +22,7 @@ def argparse_create(args):
             help="Prints out clean entry metrics into the CLI.",
             default="False")
 
+
     # Parse arguments.
     parsed_args = parser.parse_args(args)
 
@@ -134,6 +135,11 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
         re.sub(r"\n", " ", entry.strip()) for entries in ecb_pe for entry in entries
     ]
 
+    total_entries = len(entries)
+
+    if verbose:
+        print(f"Total Entries: {total_entries}")
+
     month_abbrvs = [
         "Jan",
         "Feb",
@@ -149,27 +155,57 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
         "Dec",
     ]
 
-    line_mid_re = re.compile(r".*({})\.?\W00\.?[^\.]+".format("|".join(month_abbrvs)))
+    line_mid_re = re.compile(r".*({})\.?\W{}\.?[^\.]+".format("|".join(month_abbrvs),year))
     line_mid_entries = [entry for entry in entries if line_mid_re.search(entry)]
 
     len_line_mid_entries = len(line_mid_entries)
     percent_line_mid_entries = len(line_mid_entries) / len(entries)
+
     if verbose:
-        print(f"\n Total Line Mid Entries: {len_line_mid_entries}")
+        print(f"\nTotal Line Mid Entries: {len_line_mid_entries}")
         print(f"Percent Line Mid Entries: {percent_line_mid_entries}")
 
-    front_trunc_re = re.compile(r"^[^A-ZÆ\"“]")
+    # Corrects line mid entries by splitting entries using month + year regex pattern
+    
+    split_line_mid_re = re.compile(r"(({})\.?\W{}\.?(?!$))".format("|".join(month_abbrvs), year))
+    line_mid_index = [entries.index(entry) for entry in line_mid_entries]
+
+    counter = 0
+    for index in line_mid_index:
+        entries[index + counter] = re.sub(split_line_mid_re, "\\1<ENTRY_CUT>", entries[index + counter])
+        new_entry = re.split(r"<ENTRY_CUT>", entries[index + counter], flags=re.M)
+        new_entry[1] = re.sub(r"^\W+(?=[A-Z])", "", new_entry[1])
+        entries[index + counter] = new_entry[1]
+        entries.insert(index + counter, new_entry[0])
+        counter += 1
+
+    new_total_entries = len(entries)
+
+    if verbose:
+        print(f"\nNew Total Entries After Line Mid Correction: {new_total_entries}")
+
+    # Finds truncated entries: entries with length <25 characters and entries that don't begin with a capital letter
+
+    truncated_entry_regex_patterns = [
+        "^.{0,25}$",
+        "^[^A-ZÆÅ\"“]"
+    ]
+
+    front_trunc_re = re.compile(r'({})'.format('|'.join(truncated_entry_regex_patterns)))
+
     front_trunc_entries = [entry for entry in entries if front_trunc_re.search(entry)]
     
     len_front_trunc_entries = len(front_trunc_entries)
-
-    if verbose:
-        print(f"Total Trunc Entries: {len_front_trunc_entries}")
-
     percent_front_trunc_entries = len(front_trunc_entries) / len(entries)
 
     if verbose:
+        print(f"\nTotal Trunc Entries: {len_front_trunc_entries}")
+
+    if verbose:
         print(f"Percent Trunc Entries: {percent_front_trunc_entries}")
+
+    # extracts clean entries from full entries by checking if entry is 
+    # front truncated or line mid (latter check no longer necessary after fix)
         
     clean_entries = [
         entry
@@ -179,19 +215,18 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     len_clean_entries = len(clean_entries)
 
     if verbose:
-        print(f"Total Clean Entries: {len_clean_entries}")
+        print(f"\nTotal Clean Entries: {len_clean_entries}")
 
     percent_clean_entries = len_clean_entries / len(entries)
 
     if verbose:
         print(f"Percent Clean Entries: {percent_clean_entries}")
-    
-    total_clean_entries = len(entries)
+
 
     clean_entries_measures = [len_line_mid_entries, percent_line_mid_entries, 
                               len_front_trunc_entries, percent_front_trunc_entries, 
                                 len_clean_entries, percent_clean_entries, 
-                                total_clean_entries]
+                                new_total_entries]
     
     return entries, clean_entries, clean_entries_measures, line_mid_entries, front_trunc_entries
 
@@ -318,26 +353,28 @@ if __name__ == "__main__":
     # # Currently using this one as it is the most consistent
     # pat7 = fr"{pat1}|{pat2}|{pat3}"
 
-    # Only cover years 1905 and 1922
-    for year in tqdm(range(5,23)):
+    # Only cover years 1902 and 1922
+    for year in tqdm(range(2,23)):
         if year < 10:
             year = "0" + str(year)
         
-
         # Get appropriate paths 
         year_string = str(year)
 
         cwd_path = os.path.abspath(os.getcwd()).replace("scripts", "")
 
-        if year == 19 or year == 21:
-            file_name = "ecb_19" + str(year) + "_nypl_070724.txt"
+        if int(year) < 8:
+            file_name = "ecb_19" + year_string + "_princeton_070724.txt"
+            file_path = cwd_path + os.path.join(new_data_folder_path, file_name)
+            
+        elif year == 19 or year == 21:
+            file_name = "ecb_19" + year_string + "_nypl_070724.txt"
             file_path = cwd_path + os.path.join(new_data_folder_path, file_name)
 
         else:
-            file_name = "ecb_19" + str(year) + ".txt" 
+            file_name = "ecb_19" + year_string + ".txt" 
             file_path = cwd_path + os.path.join(old_data_folder_path, file_name)
             
-
         full_entries_directory = "/entries/full_entries/"
         clean_entries_directory = "/entries/clean_entries/"
         clean_entries_measures_directory = "/entries/entries_measures/"

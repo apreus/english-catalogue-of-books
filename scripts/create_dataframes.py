@@ -76,18 +76,19 @@ def create_dataframes(file_path, year_string):
     front_pat += r"[\-—\s]*(?![\-—\s]+)(?P<middle>.*)"
 
     entry_fronts = entry_backs["front"].str.extract(front_pat)
-
+  
     full_df = pd.DataFrame()
 
     # Set columns
     full_df["entry"] = entries
+    full_df["catalogue_year"] = 1900 + int(year_string)
     full_df["front"] = entry_backs["front"]
     full_df["publisher"] = entry_backs["publisher"]
     full_df["date"] = entry_backs["date"]
     full_df["creators"] = entry_fronts["creators"]
     full_df["is_editor"] = entry_fronts["is_editor"]
     full_df["middle"] = entry_fronts["middle"]
-    full_df = full_df[["entry", "front", "creators", "is_editor", "middle", "publisher", "date"]]
+    full_df = full_df[["entry", "front", "creators", "is_editor", "middle", "publisher", "date", "catalogue_year"]]
 
     # Substitute "Surname (Name1) and Surname (Name 2)" for "Surname (Name1 and 2)"
     full_df["creators"] = full_df["creators"].str.replace(
@@ -158,6 +159,7 @@ def create_dataframes(file_path, year_string):
             "creators",
             "is_editor",
             "date",
+            "catalogue_year",
             "is_net"
         ]
     ]
@@ -183,6 +185,9 @@ def save_dataframes(full_df, df_paths, verbose):
     missing_title_df_path = df_paths[6]
     clean_df_path = df_paths[7]
     full_data_measures_path = df_paths[8]
+    missing_title_and_publisher_path = df_paths[9]
+
+    catalogue_year = full_df["catalogue_year"][1]
 
     total_full = len(full_df.index)
     full_df.to_csv(full_df_path, index=False)
@@ -218,11 +223,13 @@ def save_dataframes(full_df, df_paths, verbose):
     missing_title_df.to_csv(missing_title_df_path, index=False)
 
     # Filter for Rows with No Null Values in Any Column
-    clean_df = full_df[full_df[["first_name", "format", "last_name", 
-                                "price", "publisher", "title"]].notnull().all(1)]
+    clean_df = full_df[full_df["publisher"].notnull() & full_df["title"].notnull()]
     total_clean = len(clean_df.index)
     percent_clean = total_clean / total_full
     clean_df.to_csv(clean_df_path)
+
+    missing_title_and_publisher = full_df[full_df["publisher"].isnull() | full_df["title"].isnull()]
+    missing_title_and_publisher.to_csv(missing_title_and_publisher_path)
 
     if verbose:
         print(f"Total Missing First Name Rows: {total_missing_first_name}")
@@ -240,6 +247,7 @@ def save_dataframes(full_df, df_paths, verbose):
         print(f"Total Clean Dataframe Rows: {total_clean}")
         print(f"Percent Clean Dataframe Rows: {percent_clean}")
         print(f"Total Dataframe Rows: {total_full}")
+        print(f"Catalogue Year: {catalogue_year}")
 
     with open(full_data_measures_path, "w", newline='', encoding="utf-8", errors="ignore") as f:
         f.write(f"Total Missing First Name Rows: {total_missing_first_name}\n")
@@ -271,8 +279,8 @@ if __name__ == "__main__":
     # Iterate through Clean Entries Folder
     folder_path = '/entries/clean_entries/'
 
-    # Only cover years 1905 and 1922
-    for year in tqdm(range(5,23)):
+    # Only cover years 1902 and 1922
+    for year in tqdm(range(2,23)):
         if year < 10:
             year = "0" + str(year)
 
@@ -310,6 +318,9 @@ if __name__ == "__main__":
         full_data_measures_directory = "dataframe_measures"
         full_data_measures_path = f"{cwd_path}/dataframes/{full_data_measures_directory}/df_measures_19{year_string}.txt"
 
+        missing_title_and_publisher_directory = "missing_title_and_publisher_dataframes"
+        missing_title_and_publisher_path = f"{cwd_path}/dataframes/{missing_title_and_publisher_directory}/df_measures_19{year_string}.csv"
+
         df_paths = [full_df_path, missing_first_df_path,
                     missing_format_df_path,
                     missing_last_df_path,
@@ -317,7 +328,8 @@ if __name__ == "__main__":
                     missing_publisher_df_path,
                     missing_title_df_path,
                     clean_df_path,
-                    full_data_measures_path]
+                    full_data_measures_path,
+                    missing_title_and_publisher_path]
         
         # Create dataframes
         full_df = create_dataframes(file_path, year_string)
