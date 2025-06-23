@@ -4,6 +4,7 @@ import csv
 import sys
 from tqdm import tqdm
 import argparse
+import pandas as pd
 
 def argparse_create(args):
     """
@@ -34,6 +35,30 @@ def remove_patterns(page, patterns):
         page = re.sub(pattern, '', page, flags=re.MULTILINE)
     return page
 
+def get_splitters_by_year(year):
+    # Load splitters (patternFrontDict, appendixPatternDict, and yearPatterns) from splitters.txt
+    splitters_file_path = "splitters.txt"
+
+    try:
+        with open(splitters_file_path, "r") as file:
+            splitters = file.read()
+        exec(splitters, globals())
+        
+        # Ensure the dictionaries are defined
+        if 'patternFrontDict' not in globals():
+            raise NameError("patternFrontDict is not defined in splitters.txt")
+        if 'appendixPatternDict' not in globals():
+            raise NameError("appendixPatternDict is not defined in splitters.txt")
+        if 'yearPatterns' not in globals():
+            raise NameError("yearPatterns is not defined in splitters.txt")
+
+    except FileNotFoundError:
+        print(f"Error: The file {splitters_file_path} was not found.")
+    except NameError as ne:
+        print(f"Error: {ne}")
+
+    return patternFrontDict[year], appendixPatternDict[year], yearPatterns[year]
+
 def get_clean_entries(year_string, file_path, pattern, verbose):
     """
     Gets clean entries from a single new_text_files OCR file's year.
@@ -55,81 +80,48 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     infile = open(file_path, "r", encoding="utf-8", errors="ignore")
     contents = infile.read()
     infile.close()
-
-    # Load splitters (patternFrontDict, appendixPatternDict, and yearPatterns) from splitters.txt
-    splitters_file_path = "splitters.txt"
-
-    try:
-        with open(splitters_file_path, "r") as file:
-            splitters = file.read()
-        exec(splitters, globals())
-        
-        # Ensure the dictionaries are defined
-        if 'patternFrontDict' not in globals():
-            raise NameError("patternFrontDict is not defined in splitters.txt")
-        if 'appendixPatternDict' not in globals():
-            raise NameError("appendixPatternDict is not defined in splitters.txt")
-        if 'yearPatterns' not in globals():
-            raise NameError("yearPatterns is not defined in splitters.txt")
-
-    except FileNotFoundError:
-        print(f"Error: The file {splitters_file_path} was not found.")
-    except NameError as ne:
-        print(f"Error: {ne}")
     
-    # Get ecb_content and back_matter
-    patternFront = patternFrontDict[year_string]
-    text_raw = re.split(patternFront, contents)
+    if verbose:
+        print("CATALOGUE YEAR:", year_string, "\n")
 
+    front_pattern, appendix_pattern, year_variations = get_splitters_by_year(year_string)
+
+    # Get ecb_content and back_matter
+    text_raw = re.split(front_pattern, contents)
     if len(text_raw) < 2:
         print("The year that's not working is: ", year_string)
-        print(patternFront)
-        raise IndexError(f"No match found for patternFront: {patternFront} in ecb_content.")
+        print(front_pattern)
+        raise IndexError(f"No match found for patternFront: {front_pattern} in ecb_content.")
 
+    front_matter = text_raw[0]
+    document_page_delta = len(front_matter.split("\f")) - 2
 
-    #front_matter = text_raw[0]
     ecb_content = text_raw[1]
-    appendix_pattern = appendixPatternDict[year_string]
-    appendix_list = re.split(appendix_pattern, ecb_content, flags=re.DOTALL)
 
+    appendix_list = re.split(appendix_pattern, ecb_content, flags=re.DOTALL)
     if len(appendix_list) < 2:
         print("The year that's not working is: ", year_string)
         print(appendix_pattern)
         raise IndexError(f"No match found for appendix_pattern: {appendix_pattern} in ecb_content.")
 
     ecb_content = appendix_list[0]
- 
-    #back_matter = appendix_list[1]
 
     # Get pages
     ecb_pages = ecb_content.split("\f")
-
-    #print(len(ecb_pages))
-    
-    # Find best pattern
-    whole_ecb = "\f".join(ecb_pages)
-    """
-    pat1_matches = re.findall(pat1, whole_ecb, flags=re.M)
-    
-    pat2_matches = re.findall(pat2, whole_ecb, flags=re.M)
-    
-    pat3_matches = re.findall(pat3, whole_ecb, flags=re.M)
-    
-    patterns = [pat1, pat2, pat3]
-    pattern_matches = [pat1_matches, pat2_matches, pat3_matches]
-    """
     
     # Apply the function to each page
     ecb_pe = [remove_patterns(page, pattern) for page in ecb_pages]
 
-    # ecb_pe = [
-    #     re.sub(pattern, "", page, flags=re.M)  # this flag is for multiline regex
-    #     for page in ecb_pages
-    # ]
+    entry_terminator_regex = r'(\W({})\.?$)'.format('|'.join(year_variations))
     
-    entry_terminator_regex = r'(\W({})\.?$)'.format('|'.join(yearPatterns[year_string]))
-    ecb_pe = [re.sub(entry_terminator_regex, "\\1<ENTRY_CUT>", page, flags=re.M) for page in ecb_pe]
-    ecb_pe = [re.split(r"<ENTRY_CUT>", page, flags=re.M) for page in ecb_pe] 
+    #split up into entires and modify each entry with catalogue page number and document page number 
+    ecb_pe = [re.sub(entry_terminator_regex, "<PAGE_NUM:{}><DOCUMENT_PAGE_NUM:{}>\\1<ENTRY_CUT>".format(i, i+document_page_delta), page, flags=re.M) for i, page in enumerate(ecb_pe, start=1)]
+    
+    # replace year variations with correct year
+    # ecb_pe = [re.sub(entry_terminator_regex, " {}<ENTRY_CUT>".format(year_string), page, flags=re.M) for page in ecb_pe]
+
+    #split on year
+    ecb_pe = [re.split(r"<ENTRY_CUT>", page, flags=re.M) for page in ecb_pe]
 
     entries = [
         re.sub(r"\n", " ", entry.strip()) for entries in ecb_pe for entry in entries
@@ -148,7 +140,7 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
         "May",
         "June",
         "July",
-        "Aug",
+        "Aug", 
         "Sept",
         "Oct",
         "Nov",
@@ -172,7 +164,13 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
 
     counter = 0
     for index in line_mid_index:
-        entries[index + counter] = re.sub(split_line_mid_re, "\\1<ENTRY_CUT>", entries[index + counter])
+        match = re.search(r"<PAGE_NUM:([0-9]{0,3})><DOCUMENT_PAGE_NUM:([0-9]{0,3})>", entries[index + counter])
+        if match:
+            page_num, document_page_num = match.group(1), match.group(2)
+            entries[index + counter] = re.sub(split_line_mid_re, "<PAGE_NUM:{}><DOCUMENT_PAGE_NUM:{}>\\1<ENTRY_CUT>\\1<ENTRY_CUT>".format(page_num, document_page_num), entries[index + counter])
+        else:
+            print("main is empty, here's the index", index+counter)
+            entries[index + counter] = re.sub(split_line_mid_re, "\\1<ENTRY_CUT>", entries[index + counter])
         new_entry = re.split(r"<ENTRY_CUT>", entries[index + counter], flags=re.M)
         new_entry[1] = re.sub(r"^\W+(?=[A-Z])", "", new_entry[1])
         entries[index + counter] = new_entry[1]
@@ -187,8 +185,10 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     # Finds truncated entries: entries with length <25 characters and entries that don't begin with a capital letter
 
     truncated_entry_regex_patterns = [
-        "^.{0,25}$",
-        "^[^A-ZÆÅ\"“]"
+        "^\s+",
+        "^[^A-Za-z0-9]*$"
+        # "^.{0,25}$",
+        # "^[^A-ZÆÅ\"“]"
     ]
 
     front_trunc_re = re.compile(r'({})'.format('|'.join(truncated_entry_regex_patterns)))
@@ -210,7 +210,7 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     clean_entries = [
         entry
         for entry in entries
-        if not (line_mid_re.search(entry) or front_trunc_re.search(entry))
+        if not front_trunc_re.search(entry)
     ]
     len_clean_entries = len(clean_entries)
 
@@ -222,15 +222,111 @@ def get_clean_entries(year_string, file_path, pattern, verbose):
     if verbose:
         print(f"Percent Clean Entries: {percent_clean_entries}")
 
-
     clean_entries_measures = [len_line_mid_entries, percent_line_mid_entries, 
                               len_front_trunc_entries, percent_front_trunc_entries, 
                                 len_clean_entries, percent_clean_entries, 
                                 new_total_entries]
     
-    return entries, clean_entries, clean_entries_measures, line_mid_entries, front_trunc_entries
+    clean_entries_df = create_dataframe_from_clean_enties(clean_entries, year_variations)
 
-def clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries_measures, 
+    return entries, clean_entries_df, clean_entries_measures, line_mid_entries, front_trunc_entries
+
+def create_dataframe_from_clean_enties(clean_entries, year_variations):
+    entries = pd.Series(clean_entries)
+
+    df = pd.DataFrame()
+
+    page_data = entries.str.extract(r"<PAGE_NUM:([0-9]{0,3})><DOCUMENT_PAGE_NUM:([0-9]{0,3})>")
+    pages = page_data[0]
+    document_pages = page_data[1]
+
+    if not (len(pages) == len(document_pages) == len(entries)):
+        raise ValueError("pages, document_pages, and entries not same length")
+
+    entries = entries.str.replace("<PAGE_NUM:[0-9]{0,3}><DOCUMENT_PAGE_NUM:[0-9]{0,3}>", "", regex=True)
+
+    pub_date_pattern = fr"[A-ZÀ-ž][A-ZÀ-ž\.\s&,'\-]+,\W\w[^A-ZÀ-ž]+(?:\.|,)?\W({'|'.join(year_variations)})\.?$"
+    
+    # pub_pattern_for_doubling is pub_date_pattern without the "$" end of line check so we can check for two publishers
+    pub_pattern_for_doubling = fr"[A-ZÀ-ž][A-ZÀ-ž\.\s&,'\-]+,\W\w[^A-ZÀ-ž]+(?:\.|,)?\W({'|'.join(year_variations)})\.?"
+    double_pub_pattern = fr"{pub_pattern_for_doubling}\b.*?\b{pub_pattern_for_doubling}$"
+
+    entries_len = len(entries)
+
+    main_entries = [False] * entries_len
+    flag_for_manual_correction = [False] * entries_len
+
+    two_parentheses = [False] * entries_len
+    two_publishers = [False] * entries_len
+    see = [False] * entries_len
+    see_regex_pattern = r"see "
+
+    net = [False] * entries_len
+    net_regex_pattern = r"(.*?\bnet\b){2,}"
+
+    multiple_ellipses = [False] * entries_len
+    multiple_ellipses_regex_pattern = r"\.{5,}|\…{1,}"
+
+    double_author_regex = "(\([A-Z]+.*\)).*(\([A-Z]+.*\))"
+
+    floaty_bits_regex = "^.{0,30}$"
+    floaty_bits = [False] * entries_len
+
+    begins_with_numbers_regex = "^[0-9].*$"
+    begins_with_numbers = [False] * entries_len
+
+    for i, entry in enumerate(entries):
+        if re.search(pub_date_pattern, entry):
+            main_entries[i] = True
+
+        if re.search(double_pub_pattern, entry):
+            flag_for_manual_correction[i] = True
+            two_publishers[i] = True
+
+        if re.search(double_author_regex, entry):
+            flag_for_manual_correction[i] = True
+            two_parentheses[i] = True
+
+        if re.search(see_regex_pattern, entry):
+            flag_for_manual_correction[i] = True
+            see[i] = True
+
+        if re.search(net_regex_pattern, entry):
+            flag_for_manual_correction[i] = True
+            net[i] = True
+
+        if re.search(multiple_ellipses_regex_pattern, entry):
+            flag_for_manual_correction[i] = True
+            multiple_ellipses[i] = True
+
+        if re.search(floaty_bits_regex, entry):
+            flag_for_manual_correction[i] = True
+            floaty_bits[i] = True
+        
+        if re.search(begins_with_numbers_regex, entry):
+            flag_for_manual_correction[i] = True
+            begins_with_numbers[i] = True
+
+    if not (len(main_entries) == len(entries)):
+        raise ValueError("main_entries and entries not same length")
+
+    #Set columns
+    df["entry"] = entries
+    df["page_num"] = pages
+    df["doc_page_num"] = document_pages
+    df["main_entry"] = main_entries
+    # df["flagged"] = flag_for_manual_correction
+    df["two_publishers"] = two_publishers
+    df["see"] = see
+    df["two_parentheses"] = two_parentheses
+    df["net"] = net
+    df["ellipses"] = multiple_ellipses
+    df["floaty_bits"] = floaty_bits
+    df["begins_with_numbers"] = begins_with_numbers
+
+    return df
+
+def clean_entries_and_measures_to_csv(full_entries, clean_entries_df, clean_entries_measures, 
                                       line_mid_entries, front_trunc_entries,
                                       year_string, cwd_path, full_entries_directory,
                                       clean_entries_directory,
@@ -245,7 +341,7 @@ def clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries
 
     Arguments:
         full_entries: array; object containing all entries.
-        clean_entries: array; object containing clean entries.
+        clean_entries_df: dataframe containing entries and few categories.
         clean_entries_measures: array; object containing clean entries measures.
         line_mid_entries: array; object containing entries with dates in the middle.
         front_trunc_entries: array; object containing entries with front truncation.
@@ -284,11 +380,14 @@ def clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries
         for entry in full_entries:
             csv_writer.writerow([entry])
 
-    with open(f"{cwd_path}/{clean_entries_directory}/entries_19{year_string}.csv", 
-            "w", newline='', encoding="utf-8", errors="ignore") as f:
-        csv_writer = csv.writer(f, quotechar='"')
-        for entry in clean_entries:
-            csv_writer.writerow([entry])
+    # with open(f"{cwd_path}/{clean_entries_directory}/entries_19{year_string}.csv", 
+    #         "w", newline='', encoding="utf-8", errors="ignore") as f:
+    #     csv_writer = csv.writer(f, quotechar='"')
+    #     for entry in clean_entries_df:
+    #         csv_writer.writerow([entry])
+
+    clean_entries_df.to_csv(f"{cwd_path}/{clean_entries_directory}/entries_19{year_string}.csv", 
+                        index=False, encoding="utf-8", quotechar='"')
     
     with open(f"{cwd_path}/{line_mid_entries_directory}/entries_19{year_string}.csv", 
         "w", newline='', encoding="utf-8", errors="ignore") as f:
@@ -339,19 +438,11 @@ if __name__ == "__main__":
     # Iterate through new_text_files OCR folder
     new_data_folder_path = '/new_text_files/'
 
-    # # Initiate patterns
-    # pat1 = r"^#(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+(?s:.*?)^[A-Z]+$"
-    # pat2 = r"^##(?s:.*?)^THE ENGLISH CATALOGUE(?s:.*?)^[A-Z]{3,}(?s:.*?)^[A-Z]{3,}$"
-    # caps_header = r"^(?:[A-Z\-\'\sÈ]+)"
-    # pat3 = r"^#(?s:.*?){}(?s:.*?){}(?s:.*?){}$".format(
-    #     caps_header, caps_header, caps_header
-    # )
-    # pat4 = fr"{pat1}|{pat2}"
-    # pat5 = fr"{pat2}|{pat3}"
-    # pat6 = fr"{pat1}|{pat3}"
-
-    # # Currently using this one as it is the most consistent
-    # pat7 = fr"{pat1}|{pat2}|{pat3}"
+    full_entries_directory = "/entries/full_entries/"
+    clean_entries_directory = "/entries/clean_entries/"
+    clean_entries_measures_directory = "/entries/entries_measures/"
+    front_trunc_entries_directory = "/entries/front_trunc_entries/"
+    line_mid_entries_directory = "/entries/line_mid_entries/"
 
     # Only cover years 1902 and 1922
     for year in tqdm(range(2,23)):
@@ -375,6 +466,14 @@ if __name__ == "__main__":
             file_name = "ecb_19" + year_string + ".txt" 
             file_path = cwd_path + os.path.join(old_data_folder_path, file_name)
             
+            
+        full_entries_directory = "/entries/full_entries/"
+        clean_entries_directory = "/entries/clean_entries/"
+        clean_entries_measures_directory = "/entries/entries_measures/"
+        front_trunc_entries_directory = "/entries/front_trunc_entries/"
+        line_mid_entries_directory = "/entries/line_mid_entries/"
+        
+
         full_entries_directory = "/entries/full_entries/"
         clean_entries_directory = "/entries/clean_entries/"
         clean_entries_measures_directory = "/entries/entries_measures/"
@@ -390,10 +489,12 @@ if __name__ == "__main__":
         ]
 
         pattern = header_patterns
-        full_entries, clean_entries, clean_entries_measures, line_mid_entries, front_trunc_entries = get_clean_entries(year_string, 
+
+        full_entries, clean_entries_df, clean_entries_measures, line_mid_entries, front_trunc_entries = get_clean_entries(year_string, 
                                                                                                     file_path, 
                                                                                                     pattern, verbose)   
-        clean_entries_and_measures_to_csv(full_entries, clean_entries, clean_entries_measures, 
+                
+        clean_entries_and_measures_to_csv(full_entries, clean_entries_df, clean_entries_measures, 
                                 line_mid_entries, front_trunc_entries, 
                                 year_string, cwd_path, full_entries_directory,
                                 clean_entries_directory,
