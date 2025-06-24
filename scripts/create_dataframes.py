@@ -22,14 +22,18 @@ def create_dataframes(file_path, year_string):
         encoding="utf-8") as f:
         reader = csv.reader(f)
         clean_entries = list(reader)
-    
+
     # When reading through CSVs from /clean_entries, some rows begin and end with "
     clean_entries = [entry[0].replace("\"", "") for entry in clean_entries]
-    
+
     pub_date_pattern = fr"[A-ZÀ-ž][A-ZÀ-ž\.\s&,'\-]+,\W\w[^A-ZÀ-ž]+(?:\.|,)?\W{year_string}\.?$"
 
     main_entries = [entry for entry in clean_entries if re.search(pub_date_pattern, entry)]
+
+    print("\nMain entries:", len(main_entries))
     
+    # sys.exit("Clean and main entries testing")
+
     entries = pd.Series(main_entries)
 
     # Replace I with 1 when in close juncture with a number
@@ -58,13 +62,15 @@ def create_dataframes(file_path, year_string):
     entries = entries.str.replace(r"(\d+)5\.", "\\1s.", regex=True)
 
     back_pat = r"(?P<front>.*?)"
-
+    
     # Publisher capture group
-    back_pat += r"(?P<publisher>[A-ZÀ-ž][A-ZÀ-ž\.\s&,'\-]+),\W" # add hyphen
+    back_pat += r"(?P<publisher>[A-ZÀ-ž][A-ZÀ-ž\.\s&,'\-]+)(?:,\W)" # add hyphen
 
     # Date capture group
     back_pat += fr"(?P<date>\w[^A-ZÀ-ž]+(?:\.|,)?\W{year_string})\.?$"
     entry_backs = entries.str.extract(back_pat)
+
+    # print("Number of entries with publisher and date:", len(entry_backs))
 
     # Front capture group
     front_pat = r"^(?P<creators>(?:"
@@ -163,6 +169,12 @@ def create_dataframes(file_path, year_string):
             "is_net"
         ]
     ]
+
+    missing_publisher_df = full_df[full_df["publisher"].isna()]
+    total_missing_publisher = len(missing_publisher_df.index)
+    print(total_missing_publisher)
+
+    # sys.exit("Stop create_dataframes")
 
     return full_df
 
@@ -283,8 +295,8 @@ if __name__ == "__main__":
     for year in tqdm(range(2,23)):
         if year < 10:
             year = "0" + str(year)
-
-        # Get appropriate paths.
+        
+    # Get appropriate paths.
 
         year_string = str(year)
         file_name = "entries_19" + str(year) + ".csv" 

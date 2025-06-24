@@ -312,17 +312,17 @@ def create_dataframe_from_clean_enties(clean_entries, year_variations):
 
     #Set columns
     df["entry"] = entries
-    df["page_num"] = pages
-    df["doc_page_num"] = document_pages
-    df["main_entry"] = main_entries
-    # df["flagged"] = flag_for_manual_correction
-    df["two_publishers"] = two_publishers
-    df["see"] = see
-    df["two_parentheses"] = two_parentheses
-    df["net"] = net
-    df["ellipses"] = multiple_ellipses
-    df["floaty_bits"] = floaty_bits
-    df["begins_with_numbers"] = begins_with_numbers
+    # df["page_num"] = pages
+    # df["doc_page_num"] = document_pages
+    # df["main_entry"] = main_entries
+    # # df["flagged"] = flag_for_manual_correction
+    # df["two_publishers"] = two_publishers
+    # df["see"] = see
+    # df["two_parentheses"] = two_parentheses
+    # df["net"] = net
+    # df["ellipses"] = multiple_ellipses
+    # df["floaty_bits"] = floaty_bits
+    # df["begins_with_numbers"] = begins_with_numbers
 
     return df
 
