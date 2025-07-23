@@ -7,8 +7,11 @@ resources:
 
 <h1 class="page-top">Interactive Map</h1>
 
-<!--this tells quarto to render as a html page and to use publishers.json as a resource
-## Publishers by Year (1912–1922)
+
+This interactive map visualizes the publishing activity of the top 11 publishers in London from 1912 to 1922. Each circle represents a publisher’s location for a given year, with its size indicating the number of books published. Click on a circle to view the number of books published and the publisher’s address.
+
+
+Use the year buttons or the play button to explore changes over time.
 
 <!-- Play/Pause and Year Indicator -->
 <div style="margin-bottom: 1em; text-align: center;">
@@ -87,7 +90,6 @@ function updateMap(year) {
   fetch("publishers.json")
     .then(response => response.json())
     .then(data => {
-      
       let filtered = data.filter(d => d.year == year);
       let seenPublishers = new Set();
 
@@ -106,7 +108,8 @@ function updateMap(year) {
             <strong>${d.publisher}</strong><br>
             Year: ${d.year}<br>
             Books Published: ${d.books_published}<br>
-            ${d.ecb_address || ""}
+            ${d.ecb_address || ""}<br>
+            <small><em>Coordinates: ${d.latitude.toFixed(5)}, ${d.longitude.toFixed(5)}</em></small>
           </div>`
         ).addTo(map);
 
@@ -175,3 +178,27 @@ for (let y = minYear; y <= maxYear; y++) {
 // --- Load initial map ---
 updateMap(currentYear);
 </script>
+
+<h3>Historical Address Breakdown </h3>	
+The following example is the Wyman & Sons publishing address in 1919: <br>
+
+> **110-115 Fetter Lane , E.C. 4 . [ Wymanads , Fleet ; 6811-6813 Holborn . ]** <br>
+
++ **110-115 Fetter Lane** - Physical street address.
++ **E.C. 4.** - Postal district.
++ **Wymanads , Fleet** - Telegraphic code for advertising or the office department.
++ **6811-6813 Holborn** - Telephone number.
+
+
+<h3>Historical Context </h3>	
+In the early 20th century, London was the epicenter of English-language publishing. The addresses on the map above reflect how concentrated the industry was in a few key districts, especially:
+
+West Central (W.C.): academic, literary, government
+
+Eastern Central (E.C.): printing, legal, trade publications
+
+West End (W.): commercial and general readership
+
+Many of these publishers were within walking distance of institutions like the British Museum, The Times, and government offices, reinforcing tight knowledge and power networks.
+
+
