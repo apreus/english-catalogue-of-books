@@ -1,0 +1,43 @@
+--- 
+format: html
+---
+<!-- no title in YAML front matter because it will be covered by the navbar - use html heading instead -->
+<h1 class="page-top">Psychology and WWI</h1>
+
+<div style="margin-top: 60px;"></div>
+
+<!-- generate plot -->
+```{python}
+#| echo: false
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("all_years.csv")
+df['catalogue_year'] = df['catalogue_year'].astype(int)
+df['title'] = df['title'].astype(str).str.lower()
+
+# Filter rows that contain "psychology" in the title
+df_psych = df[df['title'].str.contains('psychology')]
+
+# Count how many times it appears each year
+counts_by_year = df_psych['catalogue_year'].value_counts().sort_index()
+
+all_years = df['catalogue_year'].sort_values().unique()
+counts_series = pd.Series(0, index=all_years)
+counts_series.update(counts_by_year)
+
+plt.figure(figsize=(8, 6))
+plt.plot(counts_series.index, counts_series.values, marker='o', color='brown')
+plt.title('Occurrences of "Psychology" in Titles Around WWI')
+plt.xlabel('Year')
+plt.ylabel('Count of Titles with "Psychology"')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+```
+
+<!-- context paragraph -->
+The field of psychology expanded significantly as a result of WWI. Psychological testing was widely implemented to assess soldiers' intelligence and personality traits; the most commonly used of these was Army Alpha, an intelligence screen that measured several aspects of intelligence, including verbal reasoning and practical judgment. Such tests were used to assign recruits to different roles and to screen out those with very low intelligence or significant mental illness. Additionally, WWI had noteworthy psychological effects on soldiers. One particular term that came to be commonly used was "shell shock," used to describe the mental and emotional issues that soldiers faced due to the trauma of fighting in the war. These psychological effects led to an increase in psychological research and discussion of the field post-WWI, as demonstrated by the steep increase in the occurrence of "psychology" in English Catalogue titles after the end of WWI in 1918.
+
+
+

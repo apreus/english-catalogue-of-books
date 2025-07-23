@@ -1,0 +1,482 @@
+[
+  {
+    "publisher": "Wyman",
+    "year": 1912,
+    "books_published": 367,
+    "latitude": 51.51606263,
+    "longitude": -0.109508789,
+    "ecb_address": "110-115 Fetter Lane , E.C. [ 5566 Holborn . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1912,
+    "books_published": 446,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "St. Martin's Street , Leicester Square , W.C. [ Publish , London ; 8830 Gerrard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1912,
+    "books_published": 295,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 Paternoster Row , E.C. [ Longmans , London ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1912,
+    "books_published": 213,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "36 , Essex Street , Strand , W.C. [ Elegiacs , London ; 12983 Central . ]"
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1912,
+    "books_published": 202,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "10 Orange Street , Leicester Square . [ Dhagoba , London ; 12432 Central . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1913,
+    "books_published": 200,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. [ Frowde , Cent . ] "
+  },
+  {
+    "publisher": "Wyman",
+    "year": 1913,
+    "books_published": 637,
+    "latitude": 51.51606263,
+    "longitude": -0.109508789,
+    "ecb_address": "110-115 Fetter Lane , E.C. [ 6810-6813 Holborn . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1913,
+    "books_published": 349,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "St. Martin's Street , Leicester Square , W.C. [ Publish , London ; 8830 Gerrard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1913,
+    "books_published": 246,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "39 Paternoster Row , E.C. [ Longmans , London ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1913,
+    "books_published": 211,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "36 , Essex Street , Strand , W.C. [ Elegiacs , London ; 12983 Central . ]"
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1913,
+    "books_published": 221,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "10 Orange Street , Leicester Square . [ Dhagoba , London ; 12432 Central . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1914,
+    "books_published": 328,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. [ Frowde , Cent . ] "
+  },
+  {
+    "publisher": "Wyman",
+    "year": 1914,
+    "books_published": 744,
+    "latitude": 51.51606263,
+    "longitude": -0.109508789,
+    "ecb_address": "110-115 Fetter Lane , E.C. [ 6810-6813 Holborn . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1914,
+    "books_published": 393,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "St. Martin's Street , Leicester Square , W.C. [ Publish , Westrand ; 8830 Ger- rard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1914,
+    "books_published": 255,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 , Paternoster Row , E.C. [ Longmans , Cent ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1914,
+    "books_published": 183,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "36 Essex Street , Strand , W.C. [ Elegiacs , Estrand ; 12983 Central . ]"
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1914,
+    "books_published": 184,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "11 Orange Street , Leicester Square . [ Dhagoba , London ; 12432 Central . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1915,
+    "books_published": 418,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. [ Frowde , Cent . ] "
+  },
+  {
+    "publisher": "Wyman",
+    "year": 1915,
+    "books_published": 807,
+    "latitude": 51.51606263,
+    "longitude": -0.109508789,
+    "ecb_address": "110-115 Fetter Lane , E.C. [ 6810-6813 Holborn . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1915,
+    "books_published": 248,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "St. Martin's Street , Leicester Square , W.C. [ Publish , Westrand ; 8830 Ger- rard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1915,
+    "books_published": 245,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 , Paternoster R E.C. [ Longmans , Cent ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1915,
+    "books_published": 177,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "36 Essex Street , Strand , W.C. [ Elegiacs , Estrand ; 12983 Central . ]"
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1915,
+    "books_published": 147,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "10 Orange Street , Leicester Square . [ Dhagoba , Westrand ; 2432 and 6069 Regent . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1916,
+    "books_published": 253,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. [ Frowde , Cent . ] "
+  },
+  {
+    "publisher": "Wyman",
+    "year": 1916,
+    "books_published": 367,
+    "latitude": 51.51606263,
+    "longitude": -0.109508789,
+    "ecb_address": "110-115 Fetter Lane , E.C. [ 6810-6813 Holborn . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1916,
+    "books_published": 257,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "10-15 St. Martin's Street , Leicester Square , W.C. [ Publish , Westrand ; 8830 Gerrard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1916,
+    "books_published": 214,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 Paternoster Row , E.C. [ Longmans , Cent ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1916,
+    "books_published": 126,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "37 Essex Street , Strand , W.C. [ Elegiacs , Estrand ; 12983 Central . ]"
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1916,
+    "books_published": 138,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "10 Orange Street , Leicester Square . [ Dhagoba , Westrand ; 2432 and 6069 Regent . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1917,
+    "books_published": 252,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. 4. [ Frowde , Cent . ]"
+  },
+  {
+    "publisher": "Wyman",
+    "year": 1917,
+    "books_published": 179,
+    "latitude": 51.51606263,
+    "longitude": -0.109508789,
+    "ecb_address": "110-115 Fetter Lane , E.C. 4 . [ 6810-6813 Holborn . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1917,
+    "books_published": 224,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "10-15 St. Martin's Street , Leicester Square , W.C. 2. [ Publish , Westrand ; 8830 Gerrard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1917,
+    "books_published": 190,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 Paternoster Row , E.C. 4. [ Longmans , Cent ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1917,
+    "books_published": 123,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "36 Essex Street , Strand , W.C. 2. [ Elegiacs , Estrand ; 12983 Central . ]"
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1917,
+    "books_published": 123,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "10 Orange Street , Leicester Square , W.C. 2. [ Dhagoba , Westrand ; 2432 Regent . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1918,
+    "books_published": 290,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. 4. [ Frowde , Cent . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1918,
+    "books_published": 140,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "10-15 St. Martin's Street , Leicester Square , W.C. 2. [ Publish , Westrand ; 8830 Gerrard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1918,
+    "books_published": 136,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 Paternoster Row , E.C. 4. [ Longmans , Cent ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1918,
+    "books_published": 73,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "36 Essex Street , Strand , W.C. 2. [ Elegiacs , Phone ; 12983 Central . ] "
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1918,
+    "books_published": 102,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "10 and 12 Orange Street , Leicester Square , W.C. 2. [ Dhagoba , West- rand ; 2432 Regent . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1919,
+    "books_published": 273,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. 4. [ Frowde , Cent . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1919,
+    "books_published": 192,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "10-15 St. Martin's Street , Leicester Square , W.C. 2. [ Publish , Westrand ; 8830 Gerrard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1919,
+    "books_published": 167,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 Paternoster Row , E.C. 4. [ Longmans , Cent ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1919,
+    "books_published": 104,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "36 Essex Street , Strand , W.C. 2. [ Elegiacs , Phone ; 12983 Central . ] "
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1919,
+    "books_published": 129,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "10 and 12 Orange Street , Leicester Square , W.C. 2. [ Dhagoba , West- rand ; 2432 Regent . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1920,
+    "books_published": 391,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. 4. [ Frowde , Cent . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1920,
+    "books_published": 291,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "10-15 St. Martin's Street , Leicester Square , W.C. 2. [ Publish , Westrand ; 8830 Gerrard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1920,
+    "books_published": 182,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 Paternoster Row , E.C. 4. [ Longmans , Cent ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1920,
+    "books_published": 189,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "37 Essex Street , Strand , W.C. 2. [ Elegiacs , Phone ; 12983 Central . ]"
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1920,
+    "books_published": 144,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "10 and 12 Orange Street , Leicester Square , W.C. 2. [ Dhagoba , West- rand ; 3827 and 3828 Regent . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1921,
+    "books_published": 523,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. 4. [ Frowde , Cent . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1921,
+    "books_published": 267,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "10-15 St. Martin's Street , Leicester Square , W.C. 2. [ Publish , Westrand ; 8830 Gerrard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1921,
+    "books_published": 119,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 Paternoster Row , E.C. 4. [ Longmans , Cent ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1921,
+    "books_published": 152,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "38 Essex Street , Strand , W.C. 2. [ Elegiacs , Phone ; 12983 Central . ]"
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1921,
+    "books_published": 126,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "11 and 12 Orange Street , Leicester Square , W.C. 2. [ Dhagoba , West- rand ; 3827 and 3828 Regent . ]"
+  },
+  {
+    "publisher": "Milford",
+    "year": 1922,
+    "books_published": 357,
+    "latitude": 51.51441317,
+    "longitude": -0.1012925362,
+    "ecb_address": "Oxford University Press , Amen Corner , E.C. 4. [ Frowde , Cent . ]"
+  },
+  {
+    "publisher": "Macmillan",
+    "year": 1922,
+    "books_published": 249,
+    "latitude": 51.50894488,
+    "longitude": -0.1299886759,
+    "ecb_address": "10-15 St. Martin's Street , Leicester Square , W.C. 2. [ Publish , Westrand ; 8830 Gerrard . ]"
+  },
+  {
+    "publisher": "Longmans",
+    "year": 1922,
+    "books_published": 127,
+    "latitude": 51.51459993,
+    "longitude": -0.09878505926,
+    "ecb_address": "38-41 Paternoster Row , E.C. 4. [ Longmans , Cent ; 3670 City . ]"
+  },
+  {
+    "publisher": "Methuen",
+    "year": 1922,
+    "books_published": 160,
+    "latitude": 51.51249837,
+    "longitude": -0.1126039094,
+    "ecb_address": "39 Essex Street , Strand , W.C. 2. [ Elegiacs , Phone ; 12983 Central . ]"
+  },
+  {
+    "publisher": "Constable ",
+    "year": 1922,
+    "books_published": 106,
+    "latitude": 51.50913887,
+    "longitude": -0.1310794809,
+    "ecb_address": "12 and 12 Orange Street , Leicester Square , W.C. 2. [ Dhagoba , West- rand ; 3827 and 3828 Regent . ]"
+  }
+]

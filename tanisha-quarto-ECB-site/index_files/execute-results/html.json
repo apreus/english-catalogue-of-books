@@ -1,0 +1,12 @@
+{
+  "hash": "40437715b99b1e5c819bc436a8be98db",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Top Publishers by Year - English Catalogue of Books\"\nformat: html\n---\n\n::: {#e8acd6aa .cell execution_count=1}\n\n::: {.cell-output .cell-output-display .cell-output-markdown}\n## 1912\n:::\n\n::: {.cell-output .cell-output-display}\n![](index_files/figure-html/cell-2-output-2.png){width=950 height=567}\n:::\n\n::: {.cell-output .cell-output-display .cell-output-markdown}\n## 1913\n:::\n\n::: {.cell-output .cell-output-display}\n![](index_files/figure-html/cell-2-output-4.png){width=950 height=567}\n:::\n\n::: {.cell-output .cell-output-display .cell-output-markdown}\n## 1914\n:::\n\n::: {.cell-output .cell-output-display}\n![](index_files/figure-html/cell-2-output-6.png){width=950 height=567}\n:::\n\n::: {.cell-output .cell-output-display .cell-output-markdown}\n## 1915\n:::\n\n::: {.cell-output .cell-output-display}\n![](index_files/figure-html/cell-2-output-8.png){width=950 height=567}\n:::\n:::\n\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

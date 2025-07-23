@@ -1,0 +1,77 @@
+---
+format:
+  html:
+    allow-html: true
+---
+
+<!-- no title in YAML front matter because it will be covered by the navbar - use html heading instead -->
+<h1 class="page-top">Collaborators</h1>
+
+Meet the people who worked on this project!
+
+<!-- white space for formatting -->
+<div style="margin-top: 60px;"></div>
+```{=html}
+
+<!-- white space for formatting -->
+<div style="margin-top: 70px;"></div>
+
+<!-- 1st row of 2 collaborators -->
+<div style="display: flex; justify-content: flex-start; gap: 6rem; width: 100%; max-width: 1000px;">
+
+  <!-- Collaborator 1 -->
+  <div style="display: flex; align-items: flex-start; gap: 1rem; width: 600px;">
+    <img src="anna_iyer_photo.jpg" style="width: 150px; height: 150px; border-radius: 6px; object-fit: cover;">
+    <div style="flex-grow: 1;">
+      <h3 style="margin: 0; color: black; font-size: 1rem;">Anna Iyer</h3>
+      <p style="margin-top: 10px; margin-bottom: 0;  font-size: 0.7rem;"> <!-- smaller font size of 0.7rem for bio text -->
+        Anna is studying industrial & systems engineering with a minor in data science. In her free time, she enjoys working on video production, robotics, and crocheting.
+      </p>
+    </div>
+  </div>
+
+  <!-- Collaborator 2 -->
+  <div style="display: flex; align-items: flex-start; gap: 1rem; width: 600px;">
+    <img src="val_photo.jpg" style="width: 150px; height: 150px; border-radius: 6px; object-fit: cover;">
+    <div style="flex-grow: 1;">
+      <h3 style="margin: 0; color: black; font-size: 1rem;">Valeria Fierro</h3>
+      <p style="margin-top: 10px; margin-bottom: 0;  font-size: 0.7rem;">
+        Valeria is an undergraduate senior pursuing a B.S. in Psychology with a minor in Data Science. She is passionate about the intersection of psychology, design, and technology, and plans to pursue a career in User Experience Design after graduation.
+      </p>
+    </div>
+  </div>
+
+</div> 
+
+<!-- white space for formatting -->
+<div style="margin-top: 70px;"></div>
+
+<!-- 2nd row of 2 collaborators -->
+<div style="display: flex; justify-content: flex-start; gap: 6rem; width: 100%; max-width: 1000px;">
+
+  <!-- Collaborator 3 -->
+  <div style="display: flex; align-items: flex-start; gap: 1rem; width: 600px;">
+    <img src="tanisha_photo.jpg" style="width: 150px; height: 150px; border-radius: 6px; object-fit: cover;">
+    <div style="flex-grow: 1;">
+      <h3 style="margin: 0; color: black; font-size: 1rem;">Tanisha Deka</h3>
+      <p style="margin-top: 10px; margin-bottom: 0;  font-size: 0.7rem;">
+        Tanisha is currently pursuing a Bachelor of Science in Psychology with a minor in Data Science. She is fascinated by the role of psychology in AI, user experience, and human-computer interaction, and she hopes to work in UX research or behavioral data analysis in the future.
+      </p>
+    </div>
+  </div>
+
+  <!-- Collaborator 4 -->
+  <div style="display: flex; align-items: flex-start; gap: 1rem; width: 600px;">
+    <img src="russel_photo.jpg" style="width: 150px; height: 150px; border-radius: 6px; object-fit: cover;">
+    <div style="flex-grow: 1;">
+      <h3 style="margin: 0; color: black; font-size: 1rem;">Zhiming Huang</h3>
+      <p style="margin-top: 10px; margin-bottom: 0;  font-size: 0.7rem;">
+        Zhiming Huang, B.S. in Informatics-Data Science.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- add more collaborator rows as needed -->
+```

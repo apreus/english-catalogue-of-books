@@ -1,0 +1,59 @@
+---
+format: html
+---
+<!-- no title in YAML front matter because it will be covered by the navbar - use html heading instead -->
+<h1 class="page-top">Top Formats by Number of Publications</h1>
+
+<div style="margin-top: 60px;"></div>
+
+
+```{python}
+#| echo: false
+import pandas as pd
+import plotly.graph_objects as go
+
+
+df = pd.read_csv("top_format.csv")
+pivot_df = df.pivot_table(index="year", columns="format", values="num_entry", aggfunc="sum", fill_value=0).sort_index()
+
+# Create one trace per format
+traces = []
+buttons = []
+
+for col in pivot_df.columns:
+    trace = go.Bar(name=col, x=pivot_df.index, y=pivot_df[col], visible=True)
+    traces.append(trace)
+    buttons.append(dict(label=col,
+                        method="update",
+                        args=[{"visible": [c == col for c in pivot_df.columns]},
+                              {"title": f"Publications for Format: {col} (1912–1922)"}]))
+
+# Add "All formats" stacked bar
+stacked = []
+for col in pivot_df.columns:
+    stacked.append(go.Bar(name=col, x=pivot_df.index, y=pivot_df[col]))
+buttons.insert(0, dict(label="All formats",
+                       method="update",
+                       args=[{"visible": [True] * len(pivot_df.columns)},
+                             {"title": "Top Formats by Number of Publications (1912–1922)",
+                              "barmode": "stack"}]))
+
+fig = go.Figure(data=stacked)
+fig.update_layout(
+    xaxis_title="Year",
+    yaxis_title="Number of Publications",
+    barmode="stack",
+    updatemenus=[dict(
+        active=0,
+        buttons=buttons,
+        direction="down",
+        showactive=True,
+        x=0,
+        xanchor="left",
+        y=1.15,
+        yanchor="top"
+    )]
+)
+fig.show()
+
+```

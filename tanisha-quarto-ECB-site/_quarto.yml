@@ -1,0 +1,50 @@
+project:
+  type: website
+  output-dir: docs
+  resources:
+    - data/*.json
+    - data/all_titles_by_year.csv
+
+website:
+  title: "English Catalogue of Books Database"
+  navbar:
+    left:
+      - text: About
+        menu:
+          - text: About Our Project
+            href: about_project.qmd
+          - text: About Our Sources
+            href: sources.qmd
+          - text: Collaborators
+            href: about_team.qmd
+      - href: our_data.qmd
+        text: Our Data
+      - text: Visualizations
+        menu:
+          - text: Top Formats
+            href: top_formats_interactive.qmd
+          - text: Top Authors
+            href: top_authors_interactive.qmd
+          - text: Top Publishers 
+            href: top_publishers_interactive.qmd
+          - text: Psychology and WWI
+            href: psychology.qmd
+      - text: Data Explorer 
+        menu:
+          - text: N-Gram Viewer
+            href: ngram.qmd
+          - text: Interactive Map
+            href: map.qmd
+        
+
+
+format:
+  html:
+    css: styles.css
+    googlefonts: 
+      - Literata 
+    allow-html: true
+  
+
+
+

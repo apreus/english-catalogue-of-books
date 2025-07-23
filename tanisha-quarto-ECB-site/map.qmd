@@ -1,0 +1,177 @@
+--- 
+format: html
+resources: 
+  - publishers.json
+---
+
+
+<h1 class="page-top">Interactive Map</h1>
+
+<!--this tells quarto to render as a html page and to use publishers.json as a resource
+## Publishers by Year (1912–1922)
+
+<!-- Play/Pause and Year Indicator -->
+<div style="margin-bottom: 1em; text-align: center;">
+  <button id="playPause">▶️ Play</button>
+  <span id="yearValue"><strong>Year:</strong> 1912</span>
+</div>
+
+<!-- Map container --> 
+<div id="map" style="height: 600px;"></div>
+
+<!-- Year buttons -->
+<div style="margin-top: 1em; text-align: center;">
+  <strong>Select Year:</strong><br>
+  <span id="yearButtons"></span>
+</div>
+
+<!-- Legend below map -->
+<div id="legend" style="
+  margin-top: 1.5em;
+  background: white;
+  padding: 18px;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.2);
+  font-size: 14px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+">
+  <!-- Legend content will be added dynamically -->
+</div>
+
+<!-- Leaflet scripts -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- JavaScript Logic -->
+<script>
+// Color palette & state 
+const colorPalette = [
+  "#1f77b4", "#ff7f0e", "#2ca02c", "#d62728",
+  "#9467bd", "#8c564b", "#e377c2", "#7f7f7f",
+  "#bcbd22", "#17becf", "#a05d56"
+];
+
+let publisherColors = {};
+let markers = [];
+let currentYear = 1912;
+let interval = null;
+const minYear = 1912;
+const maxYear = 1922;
+
+// Initialize Map 
+let map = L.map('map').setView([51.509865, -0.118092], 12);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+// Assign consistent color to each publisher 
+function getPublisherColor(publisher) {
+  if (!(publisher in publisherColors)) {
+    let idx = Object.keys(publisherColors).length % colorPalette.length;
+    publisherColors[publisher] = colorPalette[idx];
+  }
+  return publisherColors[publisher];
+}
+
+//Update the map for a given year 
+function updateMap(year) {
+  currentYear = year;
+  document.getElementById("yearValue").innerHTML = `<strong>Year:</strong> ${year}`;
+
+  // Remove existing markers
+  markers.forEach(m => map.removeLayer(m));
+  markers = [];
+
+  fetch("publishers.json")
+    .then(response => response.json())
+    .then(data => {
+      
+      let filtered = data.filter(d => d.year == year);
+      let seenPublishers = new Set();
+
+      filtered.forEach(d => {
+        const pubColor = getPublisherColor(d.publisher);
+        seenPublishers.add(d.publisher);
+
+        let circle = L.circleMarker([d.latitude, d.longitude], {
+          radius: Math.sqrt(d.books_published) * 2 + 3,
+          color: pubColor,
+          fillColor: pubColor,
+          fillOpacity: 0.4,
+          weight: 1
+        }).bindPopup(
+          `<div style='font-size: 16px'>
+            <strong>${d.publisher}</strong><br>
+            Year: ${d.year}<br>
+            Books Published: ${d.books_published}<br>
+            ${d.ecb_address || ""}
+          </div>`
+        ).addTo(map);
+
+        markers.push(circle);
+      });
+
+      updateLegend(seenPublishers);
+    });
+}
+
+// Update the publisher color legend 
+function updateLegend(publishersSet) {
+  const legend = document.getElementById("legend");
+  legend.innerHTML = "<strong>Publisher Color Key</strong><br>";
+  Array.from(publishersSet).forEach(pub => {
+    const color = getPublisherColor(pub);
+    const item = `<div style="margin: 4px 0;">
+      <span style="display:inline-block;width:12px;height:12px;background:${color};margin-right:8px;border-radius:50%;"></span>
+      ${pub}
+    </div>`;
+    legend.innerHTML += item;
+  });
+}
+
+// Play animation
+function playAnimation() {
+  interval = setInterval(() => {
+    if (currentYear < maxYear) {
+      updateMap(currentYear + 1);
+    } else {
+      clearInterval(interval);
+      document.getElementById("playPause").innerText = "▶️ Play";
+    }
+  }, 1000);
+}
+
+// Play/Pause button event 
+document.getElementById("playPause").addEventListener("click", () => {
+  if (interval) {
+    clearInterval(interval);
+    interval = null;
+    document.getElementById("playPause").innerText = "▶️ Play";
+  } else {
+    document.getElementById("playPause").innerText = "⏸ Pause";
+    playAnimation();
+  }
+});
+
+// Manual year buttons 
+const buttonContainer = document.getElementById("yearButtons");
+for (let y = minYear; y <= maxYear; y++) {
+  let btn = document.createElement("button");
+  btn.innerText = y;
+  btn.style.margin = "0 4px";
+  btn.onclick = () => {
+    if (interval) {
+      clearInterval(interval);
+      interval = null;
+      document.getElementById("playPause").innerText = "▶️ Play";
+    }
+    updateMap(y);
+  };
+  buttonContainer.appendChild(btn);
+}
+
+// --- Load initial map ---
+updateMap(currentYear);
+</script>

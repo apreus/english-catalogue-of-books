@@ -1,0 +1,115 @@
+/* css styles */
+@import url('https://fonts.googleapis.com/css2?family=Literata&display=swap');
+
+.page-top {
+  padding-top: 3rem; /* Adjust to match the height of your navbar */
+}
+
+.result-label {
+  font-weight: bold !important;
+}
+
+.navbar {
+  background-color: #4a1d08 !important; /* dark brown */
+  color: #fff;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+  color: #fff !important;
+  font-size: 1.1rem;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.navbar .nav-link:hover {
+  color: #fff !important; /* light beige on hover */
+}
+
+/* Change general background color */
+body {
+  background-color: #fff; /* light cream/beige */
+  color: #333;
+}
+
+/* adjust other content containers */
+.container, .main-content, .page-content {
+  background-color: #fff; /* lighter beige/cream */
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+/* Apply the font site-wide */
+body {
+  font-family: 'Literata', serif;
+}
+
+/* match headers */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Literata', serif;
+}
+
+/* homepage title with background image */
+.full-width-title {
+  margin-top: 10;
+  width: 100vw; /* full width of the viewport */
+  margin-left: calc(-50vw + 50%); /* center it relative to page content */
+  background-image: url("homepage_cover.jpeg"); /* adjust path */
+  background-size: cover;
+  background-position: center 54%;
+  background-repeat: no-repeat;
+  padding: 8rem 2rem;
+  width: 100vw;
+  color: white;
+  text-align: center;
+  position: relative;
+}
+
+/* better contrast for title text */
+.full-width-title h1,
+.full-width-title h2,
+.full-width-title p {
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+
+.my-table {
+    width: 50%;
+    font-family: "Literata", serif;
+    font-size: 12px;
+    border-collapse: collapse;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background-color: #fff;
+  }
+  
+  .my-table th, .my-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .my-table th {
+    background-color: rgb(3, 38, 55); /* header bg */
+    color: white;              /* header text */
+  }
+  
+  .my-table tr:hover {
+    background-color: #f1f1f1; /* hover highlight */
+  }
+
+
+.centered-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.center-text {
+  text-align: center;
+}
+
+

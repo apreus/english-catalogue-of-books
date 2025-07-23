@@ -1,0 +1,105 @@
+---
+format:
+  html:
+    css: styles.css
+    toc: false 
+    sidebar: false
+
+---
+<!-- YAML front matter - toc false removes the sidebar from this page -->
+
+<div class="full-width-title">
+
+
+## Welcome to the <em>English Catalogue of Books</em> Database
+
+The English Catalogue of books is a record of books published each year in England and Ireland, issued by Publishers’ Circular from the mid-19th through the mid-20th centuries. Our dataset currently consists of catalogue entries from 1912–1922.
+
+
+</div>
+
+<!-- white space for formatting -->
+<div style="margin-top: 100px;"></div>
+
+
+<!-- code for search box and results -->
+<div class="center-text">
+🔎 Search books published in England from 1912–1922
+</div>
+
+<div style="margin-top: 20px;"></div>
+
+<div style="display: flex; flex-direction: column; align-items: center;">
+
+<input type="text" id="searchInput" placeholder="Search books, authors, publishers..." style="width: 500px; height: 40px; font-size: 16px; padding: 8px;">
+
+ <div id="searchResults" style="margin-top: 1rem; width: 500px; text-align: center;"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+<script>
+  // Load the combined JSON once
+  fetch("data/all_years.json")
+    .then(response => response.json())
+    .then(data => {
+      // Setup Fuse
+      const options = {
+        keys: ["title", "author(s)", "publisher", "catalogue_year"],
+        threshold: 0.4,
+      };
+      const fuse = new Fuse(data, options);
+
+      const input = document.getElementById("searchInput");
+      const resultsDiv = document.getElementById("searchResults");
+
+      input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+          const query = input.value.trim();
+          if (!query) {
+            resultsDiv.innerHTML = "";
+            return;
+          }
+          const results = fuse.search(query);
+
+          if (results.length === 0) {
+            resultsDiv.innerHTML = "<p>No results found.</p>";
+            return;
+          }
+
+          // Filter duplicates based on title + author_name
+          const seen = new Set();
+          const uniqueResults = [];
+
+          for (const r of results) {
+            const item = r.item;
+            const key = (item.title || "").toLowerCase() + "||" + (item.author_name || "").toLowerCase();
+            if (!seen.has(key)) {
+              seen.add(key);
+              uniqueResults.push(r);
+            }
+          }
+
+          const safePrint = (value) => {
+            return (value === null || value === undefined || value === "") ? "null" : value;
+          };
+
+          const html = uniqueResults.slice(0, 10).map(r => {
+            const item = r.item;
+            return `
+              <div style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #ccc; text-align: left;">
+                <div><span style="font-weight: bold;">Title:</span> ${safePrint(item.title)}</div>
+                <div><span style="font-weight: bold;">Author:</span> ${safePrint(item.author_name)}</div>
+                <div><span style="font-weight: bold;">Publisher:</span> ${safePrint(item.publisher)}</div>
+                <div><span style="font-weight: bold;">Year:</span> ${safePrint(item.catalogue_year)}</div>
+              </div>
+            `;
+          }).join("");
+
+          const resultCount = `<p><strong>${uniqueResults.length} result${uniqueResults.length !== 1 ? "s" : ""} found (showing 10):</strong></p>`;
+          resultsDiv.innerHTML = resultCount + html;
+        }
+      });
+    });
+</script>
+
+
+</div>

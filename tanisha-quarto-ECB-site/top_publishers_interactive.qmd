@@ -1,0 +1,79 @@
+---
+format: html
+---
+
+<!-- no title in YAML front matter because it will be covered by the navbar - use html heading instead -->
+<h1 class="page-top">Top Publishers by Number of Publications</h1>
+
+<div style="margin-top: 60px;"></div>
+
+```{python}
+#| echo: false
+import pandas as pd
+import plotly.graph_objects as go
+
+# Load and prepare data
+df = pd.read_csv("top_publisher.csv")
+
+# Pivot table
+pivot_df = df.pivot_table(
+    index="year",
+    columns="top_publisher",
+    values="num_entry",
+    aggfunc="sum",
+    fill_value=0,
+).sort_index()
+
+# Default publisher to display
+default_publisher = "WYMAN"
+publishers = pivot_df.columns.tolist()
+
+# Ensure default exists
+if default_publisher not in publishers:
+    raise ValueError(f"'{default_publisher}' not found in top_publisher column.")
+
+# Create figure with all traces, only WYMAN visible by default
+fig = go.Figure()
+for i, col in enumerate(publishers):
+    fig.add_trace(go.Scatter(
+        x=pivot_df.index,
+        y=pivot_df[col],
+        mode="lines+markers",
+        name=col,
+        visible=(col == default_publisher)
+    ))
+
+# Create dropdown buttons for each publisher
+buttons = []
+for i, col in enumerate(publishers):
+    visibility = [c == col for c in publishers]
+    buttons.append(dict(
+        label=col,
+        method="update",
+        args=[
+            {"visible": visibility},
+            {"title": f"Publications for Publisher: {col} (1912–1922)"}
+        ]
+    ))
+
+# Update layout (no "All publishers" button, default = WYMAN)
+fig.update_layout(
+    xaxis_title="Year",
+    yaxis_title="Number of Publications",
+    margin=dict(t=60),
+    updatemenus=[dict(
+        active=publishers.index(default_publisher),
+        buttons=buttons,
+        direction="down",
+        showactive=True,
+        x=0,
+        xanchor="left",
+        y=1.15,
+        yanchor="top"
+    )]
+)
+
+fig.show()
+
+
+```
